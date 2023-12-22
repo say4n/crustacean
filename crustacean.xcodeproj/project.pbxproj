@@ -15,7 +15,6 @@
 		A277358E2B34F8DB009F0DF5 /* PostListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277358D2B34F8DB009F0DF5 /* PostListItemView.swift */; };
 		A27735902B3596F3009F0DF5 /* PostDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277358F2B3596F3009F0DF5 /* PostDetailView.swift */; };
 		A27735922B35977B009F0DF5 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27735912B35977B009F0DF5 /* Utils.swift */; };
-		A27735952B35A091009F0DF5 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = A27735942B35A091009F0DF5 /* WrappingHStack */; };
 		A27735982B35A4C4009F0DF5 /* WrappingStack in Frameworks */ = {isa = PBXBuildFile; productRef = A27735972B35A4C4009F0DF5 /* WrappingStack */; };
 		A277359A2B35A81B009F0DF5 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27735992B35A81B009F0DF5 /* Comment.swift */; };
 		A277359C2B35BD55009F0DF5 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277359B2B35BD55009F0DF5 /* Story.swift */; };
@@ -50,7 +49,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A27735952B35A091009F0DF5 /* WrappingHStack in Frameworks */,
 				A27735982B35A4C4009F0DF5 /* WrappingStack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,7 +135,6 @@
 			);
 			name = crustacean;
 			packageProductDependencies = (
-				A27735942B35A091009F0DF5 /* WrappingHStack */,
 				A27735972B35A4C4009F0DF5 /* WrappingStack */,
 			);
 			productName = crustacean;
@@ -169,7 +166,6 @@
 			);
 			mainGroup = A284137D2B3482AE008F293E;
 			packageReferences = (
-				A27735932B35A091009F0DF5 /* XCRemoteSwiftPackageReference "WrappingHStack" */,
 				A27735962B35A4C4009F0DF5 /* XCRemoteSwiftPackageReference "swiftui-wrapping-stack" */,
 			);
 			productRefGroup = A28413872B3482AE008F293E /* Products */;
@@ -428,14 +424,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		A27735932B35A091009F0DF5 /* XCRemoteSwiftPackageReference "WrappingHStack" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/dkk/WrappingHStack";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.2.11;
-			};
-		};
 		A27735962B35A4C4009F0DF5 /* XCRemoteSwiftPackageReference "swiftui-wrapping-stack" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/diniska/swiftui-wrapping-stack";
@@ -447,11 +435,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A27735942B35A091009F0DF5 /* WrappingHStack */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A27735932B35A091009F0DF5 /* XCRemoteSwiftPackageReference "WrappingHStack" */;
-			productName = WrappingHStack;
-		};
 		A27735972B35A4C4009F0DF5 /* WrappingStack */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A27735962B35A4C4009F0DF5 /* XCRemoteSwiftPackageReference "swiftui-wrapping-stack" */;
