@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import WrappingStack
 
 struct PostHeadingView: View {
     let post: Post
@@ -28,7 +27,7 @@ struct PostHeadingView: View {
                     .foregroundStyle(.secondary)
             }
             
-            WrappingHStack (id: \.self, alignment: .leading) {
+            HStack (alignment: .firstTextBaseline) {
                 ForEach(post.tags, id: \.self) { tag in
                     Section {
                         Text(tag)

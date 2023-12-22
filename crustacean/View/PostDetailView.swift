@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import WrappingStack
 
 struct PostDetailView: View {
     let post: Post
