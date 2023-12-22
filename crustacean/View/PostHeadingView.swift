@@ -23,7 +23,7 @@ struct PostHeadingView: View {
                 .font(.headline)
             
             if let hostname = URL(string: post.url)?.host {
-                Text(hostname)
+                Text("[\(hostname)](\(post.url))")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }

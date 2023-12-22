@@ -50,7 +50,7 @@ struct PostDetailView: View {
                     }
                 case .Success:
                     ForEach(comments) { comment in
-                        Text(comment.comment_plain)
+                        CommentView(comment: comment)
                     }
                 }
             }

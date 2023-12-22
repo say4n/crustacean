@@ -23,6 +23,7 @@
 		A284138E2B3482B0008F293E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A284138D2B3482B0008F293E /* Assets.xcassets */; };
 		A28413912B3482B0008F293E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A28413902B3482B0008F293E /* Preview Assets.xcassets */; };
 		A2C703492B362E1D00D3670C /* PostHeadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C703482B362E1D00D3670C /* PostHeadingView.swift */; };
+		A2C7034E2B36365500D3670C /* CommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C7034D2B36365500D3670C /* CommentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		A284138D2B3482B0008F293E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A28413902B3482B0008F293E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A2C703482B362E1D00D3670C /* PostHeadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHeadingView.swift; sourceTree = "<group>"; };
+		A2C7034D2B36365500D3670C /* CommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 				A277358D2B34F8DB009F0DF5 /* PostListItemView.swift */,
 				A2C703482B362E1D00D3670C /* PostHeadingView.swift */,
 				A277358F2B3596F3009F0DF5 /* PostDetailView.swift */,
+				A2C7034D2B36365500D3670C /* CommentView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -206,6 +209,7 @@
 				A27735862B34E898009F0DF5 /* CrustaceanTabView.swift in Sources */,
 				A277359A2B35A81B009F0DF5 /* Comment.swift in Sources */,
 				A277357E2B34DCE0009F0DF5 /* Post.swift in Sources */,
+				A2C7034E2B36365500D3670C /* CommentView.swift in Sources */,
 				A277359C2B35BD55009F0DF5 /* Story.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
