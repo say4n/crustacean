@@ -18,20 +18,6 @@ struct PostDetailView: View {
         List {
             Section {
                 PostHeadingView(post: post)
-                    .background(
-                        Color(.secondarySystemGroupedBackground)
-                            .padding(.trailing, -40) // must be >= the trailing inset
-                            .padding(.bottom, -40) // must be >= the bottom inset
-                    )
-                    .listRowBackground(
-                        Color(.secondarySystemGroupedBackground)
-                            .overlay(alignment: .top) {
-                                Divider()
-                            }
-                            .overlay(alignment: .bottom) {
-                                Divider()
-                            }
-                    )
                 
                 switch commentState {
                 case .Loading:
@@ -50,6 +36,7 @@ struct PostDetailView: View {
                 case .Success:
                     ForEach(comments) { comment in
                         CommentView(comment: comment)
+                            .padding(.leading, 10 * CGFloat(comment.depth))
                     }
                 }
             }

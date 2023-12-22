@@ -18,7 +18,7 @@ struct CommentView: View {
     
     var body: some View {
         VStack (alignment: .leading) {
-            Text(.init(comment.comment_plain))
+            Text(comment.comment_plain)
                 .font(.body)
             
             HStack {
@@ -39,7 +39,10 @@ struct CommentView: View {
             }
             .font(.footnote)
             .foregroundStyle(.secondary)
-        }.onAppear {
+        }
+        .padding(.leading, 4)
+        .border(width: 2, edges: [.leading], color: .accentColor)
+        .onAppear {
             createdAt = formatDateToHumanReadableDuration(date:comment.created_at) ?? ""
             updatedAt = formatDateToHumanReadableDuration(date:comment.updated_at) ?? ""
             userName = comment.commenting_user.username
