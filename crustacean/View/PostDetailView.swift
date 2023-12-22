@@ -74,8 +74,6 @@ struct PostDetailView: View {
                                 case let .success(story):
                                     comments = story.comments
                                     commentState = .Success
-                                    
-                                    print(comments)
                                 }
                             }
                             return
