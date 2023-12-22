@@ -14,53 +14,13 @@ struct PostListItemView: View {
     @State private var userName: String = ""
     @State private var userProfile: String = ""
     @State private var postUrl: String = ""
-    
     @State private var byLine = ""
     
     var body: some View {
         NavigationLink {
             PostDetailView(post: post)
         } label: {
-            VStack (alignment: .leading) {
-                Text(post.title)
-                    .font(.headline)
-                HStack {
-                    Text(.init(byLine))
-                    
-                    WrappingHStack (id: \.self) {
-                        ForEach(post.tags, id: \.self) { tag in
-                            Section {
-                                Text(tag)
-                                    .padding(.horizontal, 4)
-                                    .foregroundStyle(.white)
-                                    .background(
-                                        Capsule()
-                                            .fill(.gray)
-                                    )
-                            }.padding(.horizontal, 2)
-                        }
-                    }
-                }
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                HStack {
-                    Label("\(post.score)", systemImage: "arrow.up.circle")
-                        .labelStyle(.titleAndIcon)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                    
-                    Label("\(post.comment_count)", systemImage: "text.bubble")
-                        .labelStyle(.titleAndIcon)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                    
-                    Label(createdAt, systemImage: "clock")
-                        .labelStyle(.titleAndIcon)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                }
-            }
+            PostHeadingView(post: post)
         }.onAppear {
             createdAt = formatDateToHumanReadableDuration(date:post.created_at) ?? ""
             userName = post.submitter_user.username

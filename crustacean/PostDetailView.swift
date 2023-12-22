@@ -18,61 +18,21 @@ struct PostDetailView: View {
     var body: some View {
         List {
             Section {
-                VStack (alignment: .leading) {
-                    Text(post.title)
-                        .font(.headline)
-                    HStack {
-                        Text(.init(byLine))
-                        
-                        WrappingHStack (id: \.self) {
-                            ForEach(post.tags, id: \.self) { tag in
-                                Text(tag)
-                                    .padding(.horizontal, 4)
-                                    .foregroundStyle(.white)
-                                    .background(
-                                        Capsule()
-                                            .fill(.gray)
-                                    )
+                PostHeadingView(post: post)
+                    .background(
+                        Color(.secondarySystemGroupedBackground)
+                            .padding(.trailing, -40) // must be >= the trailing inset
+                            .padding(.bottom, -40) // must be >= the bottom inset
+                    )
+                    .listRowBackground(
+                        Color(.secondarySystemGroupedBackground)
+                            .overlay(alignment: .top) {
+                                Divider()
                             }
-                        }
-                    }
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    
-                    if !post.description.isEmpty {
-                        Text(post.description)
-                    }
-                    
-                    HStack {
-                        Label("\(post.score)", systemImage: "arrow.up.circle")
-                            .labelStyle(.titleAndIcon)
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                        
-                        Label("\(post.comment_count)", systemImage: "text.bubble")
-                            .labelStyle(.titleAndIcon)
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                        
-                        Label(createdAt, systemImage: "clock")
-                            .labelStyle(.titleAndIcon)
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
-                }.background(
-                    Color(UIColor.secondarySystemGroupedBackground)
-                        .padding(.trailing, -40) // must be >= the trailing inset
-                        .padding(.bottom, -40) // must be >= the bottom inset
-                )
-                .listRowBackground(
-                    Color(UIColor.secondarySystemGroupedBackground)
-                        .overlay(alignment: .top) {
-                            Divider()
-                        }
-                        .overlay(alignment: .bottom) {
-                            Divider()
-                        }
-                )
+                            .overlay(alignment: .bottom) {
+                                Divider()
+                            }
+                    )
                 
                 switch commentState {
                 case .Loading:
