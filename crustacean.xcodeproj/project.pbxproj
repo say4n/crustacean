@@ -77,19 +77,13 @@
 		A28413882B3482AE008F293E /* crustacean */ = {
 			isa = PBXGroup;
 			children = (
+				A2C7034A2B3633E400D3670C /* Model */,
+				A2C7034C2B36341F00D3670C /* View */,
 				A28413892B3482AE008F293E /* CrustaceanApp.swift */,
 				A284138B2B3482AE008F293E /* ContentView.swift */,
 				A27735872B34E919009F0DF5 /* Tab.swift */,
-				A27735852B34E898009F0DF5 /* CrustaceanTabView.swift */,
-				A277358D2B34F8DB009F0DF5 /* PostListItemView.swift */,
-				A2C703482B362E1D00D3670C /* PostHeadingView.swift */,
 				A27735912B35977B009F0DF5 /* Utils.swift */,
-				A277358F2B3596F3009F0DF5 /* PostDetailView.swift */,
-				A27735992B35A81B009F0DF5 /* Comment.swift */,
-				A277359B2B35BD55009F0DF5 /* Story.swift */,
 				A27735892B34EC92009F0DF5 /* Constants.swift */,
-				A277357D2B34DCE0009F0DF5 /* Post.swift */,
-				A277357F2B34DCEE009F0DF5 /* User.swift */,
 				A284138D2B3482B0008F293E /* Assets.xcassets */,
 				A284138F2B3482B0008F293E /* Preview Content */,
 			);
@@ -102,6 +96,28 @@
 				A28413902B3482B0008F293E /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		A2C7034A2B3633E400D3670C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A277357F2B34DCEE009F0DF5 /* User.swift */,
+				A277359B2B35BD55009F0DF5 /* Story.swift */,
+				A277357D2B34DCE0009F0DF5 /* Post.swift */,
+				A27735992B35A81B009F0DF5 /* Comment.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		A2C7034C2B36341F00D3670C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				A27735852B34E898009F0DF5 /* CrustaceanTabView.swift */,
+				A277358D2B34F8DB009F0DF5 /* PostListItemView.swift */,
+				A2C703482B362E1D00D3670C /* PostHeadingView.swift */,
+				A277358F2B3596F3009F0DF5 /* PostDetailView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
