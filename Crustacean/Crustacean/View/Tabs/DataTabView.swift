@@ -12,22 +12,22 @@ struct DataTabView: View {
     @ObservedObject var dataSource = TabDataSource()
 
     var body: some View {
+        let items = dataSource.items[tabType] ?? []
+
         ScrollView {
             LazyVStack {
-                let items = dataSource.items[tabType] ?? []
-
-                ForEach(Array(zip(items.indices, items)), id: \.0) { index, item in
-                    PostItemView(data: item)
+                ForEach(items.indices, id: \.self) { index in
+                    PostItemView(data: items[index])
                         .onAppear {
                             Task {
                                 await dataSource.fetchData(for: tabType, cursor: index)
                             }
                         }
                 }
-            }.onAppear {
-                Task {
-                    await dataSource.fetchData(for: tabType)
-                }
+            }
+        }.onAppear {
+            Task {
+                await dataSource.fetchData(for: tabType)
             }
         }
     }

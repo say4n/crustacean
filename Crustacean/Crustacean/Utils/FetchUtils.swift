@@ -15,6 +15,7 @@ func fetchDataFromURL(_ url: URL) async throws -> Data {
 
     request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
     request.timeoutInterval = 10
+    request.cachePolicy = .reloadRevalidatingCacheData
 
     let (data, _) = try await URLSession.shared.data(for: request)
 

@@ -28,18 +28,17 @@ struct ContentView: View {
     @State private var selectedTab = TabType.hottest.rawValue
 
     var body: some View {
-        NavigationView {
-            TabView(selection: $selectedTab) {
-                ForEach(tabs, id: \.self) { tab in
-                    HStack {
-                        DataTabView(tabType: tab.name)
-                    }
-                    .tabItem {
-                        Label(tab.name.rawValue, systemImage: tab.icon)
-                    }
-                    .tag(tab.name.rawValue)
+        TabView(selection: $selectedTab) {
+            ForEach(tabs, id: \.self) { tab in
+                NavigationView {
+                    DataTabView(tabType: tab.name)
+                        .navigationTitle(selectedTab)
                 }
-            }.navigationTitle(selectedTab)
+                .tabItem {
+                    Label(tab.name.rawValue, systemImage: tab.icon)
+                }
+                .tag(tab.name.rawValue)
+            }
         }
     }
 }
