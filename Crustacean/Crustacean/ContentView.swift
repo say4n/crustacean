@@ -7,17 +7,32 @@
 
 import SwiftUI
 
+struct Tab: Hashable {
+    let name: String
+    let icon: String
+}
+
 struct ContentView: View {
-    let tabs = [""]
+    let tabs = [
+        Tab(name: "Hottest", icon: "flame"),
+        Tab(name: "Active", icon: "popcorn"),
+        Tab(name: "Newest", icon: "mail.stack"),
+    ]
+    
+    @State private var selectedTab = "Hottest"
     
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView {
+            TabView (selection: $selectedTab) {
+                ForEach(tabs, id: \.self) { tab in
+                    Text(tab.name)
+                        .tabItem {
+                            Label(tab.name, systemImage: tab.icon)
+                        }
+                        .tag(tab.name)
+                }
+            }.navigationTitle(selectedTab)
         }
-        .padding()
     }
 }
 
