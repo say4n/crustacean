@@ -11,8 +11,8 @@ let BASE_URL = URL(string: "https://lobste.rs")!
 
 protocol DataSource {
     static var shared: Self { get }
-    var items: [Post] { get }
-    var state: DataSourceState { get }
+    var items: [TabType: [Post]] { get }
+    var state: [TabType: DataSourceState] { get }
 }
 
 enum DataSourceState {

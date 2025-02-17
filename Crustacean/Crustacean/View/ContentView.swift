@@ -32,14 +32,7 @@ struct ContentView: View {
             TabView(selection: $selectedTab) {
                 ForEach(tabs, id: \.self) { tab in
                     HStack {
-                        switch tab.name {
-                        case TabType.hottest:
-                            HotTabView()
-                        case TabType.active:
-                            ActiveTabView()
-                        case TabType.newest:
-                            NewTabView()
-                        }
+                        DataTabView(tabType: tab.name)
                     }
                     .tabItem {
                         Label(tab.name.rawValue, systemImage: tab.icon)

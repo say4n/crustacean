@@ -12,13 +12,29 @@ struct PostItemView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
+            Divider()
+
             Text(data.title)
                 .font(.headline)
 
-            Text(data.submitterUser)
+            byline
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
+        .padding(.horizontal)
+    }
+
+    var byOrVia: String { if data.userIsAuthor { "by " } else { "via " }}
+
+    var byline: some View {
+        HStack {
+            Text(byOrVia + data.submitterUser)
+
+            Spacer()
+
+            if let date = Date.parseISO(from: data.createdAt) {
+                Text(date.timeAgoDisplay())
+            }
+        }
     }
 }
 
