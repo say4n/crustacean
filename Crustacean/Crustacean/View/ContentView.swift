@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum TabType: String {
-    case hottest = "Hottest"
+    case hottest = "Trending"
     case active = "Active"
     case newest = "Newest"
 }
