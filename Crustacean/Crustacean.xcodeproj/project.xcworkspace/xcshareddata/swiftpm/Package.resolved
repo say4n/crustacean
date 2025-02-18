@@ -1,13 +1,13 @@
 {
-  "originHash" : "0610bb0d6e5971194be0b62ca71129494ceee998dfa8b3645de79bb738293fb6",
+  "originHash" : "00398ece5b8c1a1be5b1a79c6b5417558509a282b2721d1d128d58d127516896",
   "pins" : [
     {
-      "identity" : "swiftformat",
+      "identity" : "swiftui-flow",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/nicklockwood/SwiftFormat",
+      "location" : "https://github.com/tevelee/SwiftUI-Flow",
       "state" : {
-        "revision" : "468a7d32dedc8d352c191594b3b45d9fd8ba291b",
-        "version" : "0.55.5"
+        "revision" : "5b2f4b3373ff5ba6a8a1666d52ebfd9dc6c0e10b",
+        "version" : "3.0.1"
       }
     }
   ],

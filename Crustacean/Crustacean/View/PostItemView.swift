@@ -5,6 +5,7 @@
 //  Created by Sayan Goswami on 17/02/2025.
 //
 
+import Flow
 import SwiftUI
 
 struct PostItemView: View {
@@ -16,6 +17,18 @@ struct PostItemView: View {
 
             Text(data.title)
                 .font(.headline)
+
+            HFlow {
+                ForEach(data.tags, id: \.self) { tag in
+                    Text(tag)
+                        .font(.caption)
+                        .bold()
+                        .padding(.horizontal, 6)
+                        .colorInvert()
+                        .background(Color.primary.gradient)
+                        .clipShape(Capsule())
+                }
+            }.padding(.bottom, 4)
 
             byline
         }
