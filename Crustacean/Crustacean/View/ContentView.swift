@@ -27,6 +27,8 @@ struct ContentView: View {
 
     @State private var selectedTab = TabType.hottest.rawValue
 
+    private let dataSource = TabDataSource.shared
+
     var body: some View {
         TabView(selection: $selectedTab) {
             ForEach(tabs, id: \.self) { tab in
@@ -38,6 +40,11 @@ struct ContentView: View {
                     Label(tab.name.rawValue, systemImage: tab.icon)
                 }
                 .tag(tab.name.rawValue)
+            }
+        }.onAppear {
+            Task {
+                // Pre-fetch tab data.
+                await (dataSource.fetchData(for: .hottest), dataSource.fetchData(for: .active), dataSource.fetchData(for: .newest))
             }
         }
     }

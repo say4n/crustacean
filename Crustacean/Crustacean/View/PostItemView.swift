@@ -13,8 +13,6 @@ struct PostItemView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Divider()
-
             NavigationLink {
                 PostDetailView(postData: data)
             } label: {
@@ -27,18 +25,22 @@ struct PostItemView: View {
                 ForEach(data.tags, id: \.self) { tag in
                     Text(tag)
                         .font(.caption)
-                        .bold()
+                        .fontWeight(.semibold)
                         .padding(.horizontal, 6)
                         .colorInvert()
                         .background(Color.primary.gradient)
                         .clipShape(Capsule())
                 }
             }.padding(.bottom, 4)
+                .padding(.top, 0.1)
 
             byline
+
+            Divider()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
+        .padding(.bottom)
     }
 
     var bylineString: LocalizedStringKey {

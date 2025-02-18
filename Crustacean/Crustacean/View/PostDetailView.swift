@@ -21,6 +21,7 @@ struct PostDetailView: View {
                     ForEach(postData.tags, id: \.self) { tag in
                         Text(tag)
                             .font(.caption)
+                            .fontWeight(.semibold)
                             .bold()
                             .padding(.horizontal, 6)
                             .colorInvert()
@@ -28,6 +29,7 @@ struct PostDetailView: View {
                             .clipShape(Capsule())
                     }
                 }.padding(.bottom, 4)
+                    .padding(.top, 0.1)
 
                 byline
 
@@ -35,6 +37,7 @@ struct PostDetailView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal)
+            .padding(.bottom)
         }
     }
 

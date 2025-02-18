@@ -47,10 +47,6 @@ import OSLog
 
         if items[tabType]!.count - cursor > 10 {
             return
-        } else {
-            DispatchQueue.main.async {
-                self.pageByTab[tabType] = (self.pageByTab[tabType] ?? 1) + 1
-            }
         }
 
         DispatchQueue.main.async {
@@ -63,7 +59,13 @@ import OSLog
             logger.info("Fetched \(fetchedItems.count) \(tabType.rawValue) posts in page \(_page)")
 
             DispatchQueue.main.async {
-                self.items[tabType]?.append(contentsOf: fetchedItems)
+                let existingPostIds = self.items[tabType]?.map { $0.shortId }
+                let filteredItems: [Post] = fetchedItems.filter { existingPostIds?.contains($0.shortId) != true }
+
+                self.logger.info("Appended \(filteredItems.count) \(tabType.rawValue) posts in page \(_page)")
+                self.items[tabType]?.append(contentsOf: filteredItems)
+
+                self.pageByTab[tabType] = (self.pageByTab[tabType] ?? 1) + 1
             }
         } catch {
             logger.error("Failed to fetch \(tabType.rawValue) posts")

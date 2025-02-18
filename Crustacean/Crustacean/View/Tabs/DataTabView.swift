@@ -14,20 +14,26 @@ struct DataTabView: View {
     var body: some View {
         let items = dataSource.items[tabType] ?? []
 
-        ScrollView {
-            LazyVStack {
-                ForEach(items.indices, id: \.self) { index in
-                    PostItemView(data: items[index])
-                        .onAppear {
-                            Task {
-                                await dataSource.fetchData(for: tabType, cursor: index)
-                            }
-                        }
-                }
+        ZStack(alignment: .top) {
+            if [DataSourceState.unknown, DataSourceState.loading].contains(dataSource.state[tabType]) {
+                ProgressView()
+                    .padding(4)
+                    .background(Color.secondary.opacity(0.2))
+                    .clipShape(Capsule())
+                    .padding(.top)
             }
-        }.onAppear {
-            Task {
-                await dataSource.fetchData(for: tabType)
+
+            ScrollView {
+                LazyVStack {
+                    ForEach(items.indices, id: \.self) { index in
+                        PostItemView(data: items[index])
+                            .onAppear {
+                                Task {
+                                    await dataSource.fetchData(for: tabType, cursor: index)
+                                }
+                            }
+                    }
+                }
             }
         }
     }
