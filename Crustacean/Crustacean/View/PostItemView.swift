@@ -23,16 +23,26 @@ struct PostItemView: View {
         .padding(.horizontal)
     }
 
-    var byOrVia: String { if data.userIsAuthor { "by " } else { "via " }}
+    var bylineString: LocalizedStringKey {
+        let byOrVia = if data.userIsAuthor { "by" } else { "via" }
+        let dateString = Date.parseISO(from: data.createdAt)?.timeAgoDisplay() ?? ""
+        return "\(byOrVia) \(data.submitterUser) \(dateString)"
+    }
 
     var byline: some View {
         HStack {
-            Text(byOrVia + data.submitterUser)
+            Text(bylineString)
 
             Spacer()
 
-            if let date = Date.parseISO(from: data.createdAt) {
-                Text(date.timeAgoDisplay())
+            HStack {
+                Image(systemName: "arrow.up")
+                Text(data.score.description)
+            }
+
+            HStack {
+                Image(systemName: "bubble")
+                Text(data.commentCount.description)
             }
         }
     }
