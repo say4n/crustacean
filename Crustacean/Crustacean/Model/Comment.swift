@@ -26,19 +26,19 @@ struct Comment: Decodable {
 
 extension Comment {
     enum CodingKeys: String, CodingKey {
-        case comment = "comment"
+        case comment
         case commentPlain = "comment_plain"
         case commentingUser = "commenting_user"
         case createdAt = "created_at"
-        case depth = "depth"
-        case flags = "flags"
+        case depth
+        case flags
         case isDeleted = "is_deleted"
         case isModerated = "is_moderated"
         case lastEditedAt = "last_edited_at"
         case parentComment = "parent_comment"
-        case score = "score"
+        case score
         case shortId = "short_id"
         case shortIdUrl = "short_id_url"
-        case url = "url"
+        case url
     }
 }
