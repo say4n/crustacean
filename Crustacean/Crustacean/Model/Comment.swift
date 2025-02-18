@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Comment: Decodable {
+class Comment: Decodable {
     let comment: String
     let commentPlain: String
     let commentingUser: String
@@ -17,11 +17,51 @@ struct Comment: Decodable {
     let isDeleted: Bool
     let isModerated: Bool
     let lastEditedAt: String
-    let parentComment: String
+    let parentComment: String?
     let score: Int
     let shortId: String
     let shortIdUrl: String
     let url: String
+
+    var children: [Comment] = []
+
+    init(comment: String, commentPlain: String, commentingUser: String, createdAt: String, depth: Int, flags: Int, isDeleted: Bool, isModerated: Bool, lastEditedAt: String, parentComment: String?, score: Int, shortId: String, shortIdUrl: String, url: String, children: [Comment]) {
+        self.comment = comment
+        self.commentPlain = commentPlain
+        self.commentingUser = commentingUser
+        self.createdAt = createdAt
+        self.depth = depth
+        self.flags = flags
+        self.isDeleted = isDeleted
+        self.isModerated = isModerated
+        self.lastEditedAt = lastEditedAt
+        self.parentComment = parentComment
+        self.score = score
+        self.shortId = shortId
+        self.shortIdUrl = shortIdUrl
+        self.url = url
+        self.children = children
+    }
+
+    static func getNullComment() -> Comment {
+        return Comment(
+            comment: "",
+            commentPlain: "",
+            commentingUser: "",
+            createdAt: "",
+            depth: -1,
+            flags: -1,
+            isDeleted: false,
+            isModerated: false,
+            lastEditedAt: "",
+            parentComment: nil,
+            score: -1,
+            shortId: "",
+            shortIdUrl: "",
+            url: "",
+            children: []
+        )
+    }
 }
 
 extension Comment {

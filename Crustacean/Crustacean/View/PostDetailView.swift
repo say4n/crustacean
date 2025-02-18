@@ -11,6 +11,8 @@ import SwiftUI
 struct PostDetailView: View {
     let postData: Post
 
+    @ObservedObject var commentsData = CommentDataSource.shared
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -32,12 +34,24 @@ struct PostDetailView: View {
                     .padding(.top, 0.1)
 
                 byline
-
-                Divider()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal)
             .padding(.bottom)
+            .onAppear {
+                Task {
+                    try await commentsData.fetchComments(shortId: postData.shortId)
+                }
+            }
+
+            let rootNode = commentsData.comments[postData.shortId]
+
+            if rootNode != nil && !rootNode!.children.isEmpty {
+                CommentView(commentHierarchy: rootNode!)
+            } else {
+                // No comments.
+                Text("No comments yet.")
+            }
         }
     }
 

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A22DF6472D640E7E005457C9 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = A22DF6462D640E7E005457C9 /* Flow */; };
+		A299FC572D6529C500DD27F4 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = A299FC562D6529C500DD27F4 /* SwiftyJSON */; };
+		A2F639372D6541EE00769791 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = A2F639362D6541EE00769791 /* MarkdownUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +29,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2F639372D6541EE00769791 /* MarkdownUI in Frameworks */,
+				A299FC572D6529C500DD27F4 /* SwiftyJSON in Frameworks */,
 				A22DF6472D640E7E005457C9 /* Flow in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -38,6 +42,7 @@
 			isa = PBXGroup;
 			children = (
 				A29CF4B42D62B68C003D8C9D /* Crustacean */,
+				A2F639352D6541EE00769791 /* Frameworks */,
 				A29CF4B32D62B68C003D8C9D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -48,6 +53,13 @@
 				A29CF4B22D62B68C003D8C9D /* Crustacean.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A2F639352D6541EE00769791 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -72,6 +84,8 @@
 			name = Crustacean;
 			packageProductDependencies = (
 				A22DF6462D640E7E005457C9 /* Flow */,
+				A299FC562D6529C500DD27F4 /* SwiftyJSON */,
+				A2F639362D6541EE00769791 /* MarkdownUI */,
 			);
 			productName = Crustacean;
 			productReference = A29CF4B22D62B68C003D8C9D /* Crustacean.app */;
@@ -103,6 +117,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				A22DF6452D640E7E005457C9 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
+				A299FC552D6529C500DD27F4 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				A2F639342D65415500769791 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A29CF4B32D62B68C003D8C9D /* Products */;
@@ -367,6 +383,22 @@
 				minimumVersion = 3.0.1;
 			};
 		};
+		A299FC552D6529C500DD27F4 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
+		A2F639342D65415500769791 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.4.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -374,6 +406,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A22DF6452D640E7E005457C9 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;
 			productName = Flow;
+		};
+		A299FC562D6529C500DD27F4 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A299FC552D6529C500DD27F4 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+		A2F639362D6541EE00769791 /* MarkdownUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A2F639342D65415500769791 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
+			productName = MarkdownUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
