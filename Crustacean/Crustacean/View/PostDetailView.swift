@@ -16,8 +16,13 @@ struct PostDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                Text(postData.title)
-                    .font(.headline)
+                if postData.url != "" {
+                    Link(postData.title, destination: URL(string: postData.url)!)
+                        .font(.headline)
+                } else {
+                    Text(postData.title)
+                        .font(.headline)
+                }
 
                 HFlow {
                     ForEach(postData.tags, id: \.self) { tag in
@@ -36,7 +41,7 @@ struct PostDetailView: View {
                 byline
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal)
+            .padding(.horizontal, 8)
             .padding(.bottom)
             .onAppear {
                 Task {
@@ -55,15 +60,19 @@ struct PostDetailView: View {
         }
     }
 
-    var bylineString: LocalizedStringKey {
-        let byOrVia = if postData.userIsAuthor { "by" } else { "via" }
-        let dateString = Date.parseISO(from: postData.createdAt)?.timeAgoDisplay() ?? ""
-        return "\(byOrVia) \(postData.submitterUser) \(dateString)"
-    }
-
     var byline: some View {
         HStack {
-            Text(bylineString)
+            HStack {
+                let byOrVia = if postData.userIsAuthor { "by" } else { "via" }
+                let dateString = Date.parseISO(from: postData.createdAt)?.timeAgoDisplay() ?? ""
+
+                Text(byOrVia)
+                Link(postData.submitterUser, destination: URL(string: "https://lobste.rs/~\(postData.submitterUser)")!)
+                Circle()
+                    .frame(width: 4, height: 4)
+                    .foregroundColor(Color.primary)
+                Link(dateString, destination: URL(string: postData.shortIdUrl)!)
+            }
 
             Spacer()
 

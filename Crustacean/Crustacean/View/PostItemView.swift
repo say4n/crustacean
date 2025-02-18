@@ -16,25 +16,27 @@ struct PostItemView: View {
             NavigationLink {
                 PostDetailView(postData: data)
             } label: {
-                Text(data.title)
-                    .font(.headline)
+                VStack(alignment: .leading) {
+                    Text(data.title)
+                        .font(.headline)
+
+                    HFlow {
+                        ForEach(data.tags, id: \.self) { tag in
+                            Text(tag)
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .padding(.horizontal, 6)
+                                .colorInvert()
+                                .background(Color.primary.gradient)
+                                .clipShape(Capsule())
+                        }
+                    }.padding(.bottom, 4)
+                        .padding(.top, 0.1)
+
+                    byline
+                }
             }.frame(alignment: .leading)
                 .buttonStyle(.plain)
-
-            HFlow {
-                ForEach(data.tags, id: \.self) { tag in
-                    Text(tag)
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .padding(.horizontal, 6)
-                        .colorInvert()
-                        .background(Color.primary.gradient)
-                        .clipShape(Capsule())
-                }
-            }.padding(.bottom, 4)
-                .padding(.top, 0.1)
-
-            byline
 
             Divider()
         }
