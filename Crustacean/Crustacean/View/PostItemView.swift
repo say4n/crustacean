@@ -15,8 +15,13 @@ struct PostItemView: View {
         VStack(alignment: .leading) {
             Divider()
 
-            Text(data.title)
-                .font(.headline)
+            NavigationLink {
+                PostDetailView()
+            } label: {
+                Text(data.title)
+                    .font(.headline)
+            }.frame(alignment: .leading)
+                .buttonStyle(.plain)
 
             HFlow {
                 ForEach(data.tags, id: \.self) { tag in
