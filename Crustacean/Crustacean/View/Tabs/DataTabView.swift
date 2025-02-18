@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DataTabView: View {
     let tabType: TabType
-    @ObservedObject var dataSource = TabDataSource()
+    @ObservedObject var dataSource = TabDataSource.shared
 
     var body: some View {
         let items = dataSource.items[tabType] ?? []
