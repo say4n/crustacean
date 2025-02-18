@@ -16,7 +16,7 @@ struct PostItemView: View {
             Divider()
 
             NavigationLink {
-                PostDetailView()
+                PostDetailView(postData: data)
             } label: {
                 Text(data.title)
                     .font(.headline)
