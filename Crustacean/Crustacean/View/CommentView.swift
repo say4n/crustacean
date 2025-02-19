@@ -5,7 +5,6 @@
 //  Created by Sayan Goswami on 18/02/2025.
 //
 
-import MarkdownUI
 import SwiftUI
 
 struct CommentView: View {
@@ -52,24 +51,7 @@ struct CommentView: View {
             }
 
             Group {
-                Markdown(commentHierarchy.commentPlain)
-                    .markdownBlockStyle(\.blockquote) { configuration in
-                        configuration.label
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .markdownTextStyle {
-                                BackgroundColor(nil)
-                            }
-                            .overlay(alignment: .leading) {
-                                Rectangle()
-                                    .fill(Color.secondary.opacity(0.3))
-                                    .frame(width: 4)
-                            }
-                            .background(Color.secondary.opacity(0.2))
-                    }.markdownTextStyle(\.text) {
-                        FontSize(.em(1))
-                        ForegroundColor(commentHierarchy.score >= 0 ? Color.primary : Color.primary.opacity(0.4))
-                    }
+                MarkdownView(text: commentHierarchy.commentPlain, score: commentHierarchy.score)
 
                 VStack(spacing: 0) {
                     ForEach(commentHierarchy.children, id: \.shortId) { child in
