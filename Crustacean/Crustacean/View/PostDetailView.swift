@@ -16,13 +16,19 @@ struct PostDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                if postData.url != "" {
-                    Link(postData.title, destination: URL(string: postData.url)!)
-                        .font(.headline)
-                } else {
-                    Text(postData.title)
-                        .font(.headline)
-                }
+                Group {
+                    if postData.url != "" {
+                        Link(destination: URL(string: postData.url)!) {
+                            Text(postData.title)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .multilineTextAlignment(.leading)
+                        }
+                    } else {
+                        Text(postData.title)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .multilineTextAlignment(.leading)
+                    }
+                }.font(.system(size: 20, weight: .bold))
 
                 HFlow {
                     ForEach(postData.tags, id: \.self) { tag in
