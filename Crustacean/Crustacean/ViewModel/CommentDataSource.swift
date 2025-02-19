@@ -7,6 +7,7 @@
 
 import Foundation
 import OSLog
+import SwiftUI
 import SwiftyJSON
 
 @MainActor class CommentDataSource: ObservableObject {
@@ -18,6 +19,10 @@ import SwiftyJSON
     private var logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "CommentDataSource")
 
     func fetchComments(shortId: String) async throws {
+        DispatchQueue.main.async {
+            self.state = .loading
+        }
+
         let endpoint = BASE_URL.appending(path: "/s/\(shortId).json")
 
         logger.info("Fetching comments for \(shortId)")
@@ -87,6 +92,11 @@ import SwiftyJSON
         DispatchQueue.main.async {
             self.logger.info("Updating comment data source for \(shortId)")
             self.comments[shortId] = treeMap[shortId]
+
+            withAnimation {
+                self.state = .loaded
+            }
+
             self.objectWillChange.send()
         }
     }

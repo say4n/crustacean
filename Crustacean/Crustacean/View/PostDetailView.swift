@@ -55,12 +55,22 @@ struct PostDetailView: View {
                 }
             }
 
-            let rootNode = commentsData.comments[postData.shortId]
+            switch commentsData.state {
+            case .loading:
+                ProgressView()
+            case .error:
+                Text("Error loading comments.")
+            case .loaded:
+                let rootNode = commentsData.comments[postData.shortId]
 
-            if rootNode != nil && !rootNode!.children.isEmpty {
-                CommentView(commentHierarchy: rootNode!)
-            } else {
-                // No comments.
+                if rootNode != nil && !rootNode!.children.isEmpty {
+                    CommentView(commentHierarchy: rootNode!)
+                        .transition(.scale)
+                } else {
+                    // No comments.
+                    Text("No comments yet.")
+                }
+            case .unknown:
                 Text("No comments yet.")
             }
         }
