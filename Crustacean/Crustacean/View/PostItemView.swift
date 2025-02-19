@@ -45,15 +45,19 @@ struct PostItemView: View {
         .padding(.bottom)
     }
 
-    var bylineString: LocalizedStringKey {
-        let byOrVia = if data.userIsAuthor { "by" } else { "via" }
-        let dateString = Date.parseISO(from: data.createdAt)?.timeAgoDisplay() ?? ""
-        return "\(byOrVia) \(data.submitterUser) \(dateString)"
-    }
-
     var byline: some View {
         HStack {
-            Text(bylineString)
+            HStack(spacing: 4) {
+                let byOrVia = if data.userIsAuthor { "by" } else { "via" }
+                let dateString = Date.parseISO(from: data.createdAt)?.timeAgoDisplay() ?? ""
+
+                Text(byOrVia)
+                Link(data.submitterUser, destination: URL(string: "https://lobste.rs/~\(data.submitterUser)")!)
+                Circle()
+                    .frame(width: 4, height: 4)
+                    .foregroundColor(Color.primary)
+                Link(dateString, destination: URL(string: data.shortIdUrl)!)
+            }
 
             Spacer()
 

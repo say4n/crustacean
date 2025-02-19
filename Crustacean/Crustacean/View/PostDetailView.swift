@@ -68,7 +68,7 @@ struct PostDetailView: View {
 
     var byline: some View {
         HStack {
-            HStack {
+            HStack(spacing: 4) {
                 let byOrVia = if postData.userIsAuthor { "by" } else { "via" }
                 let dateString = Date.parseISO(from: postData.createdAt)?.timeAgoDisplay() ?? ""
 

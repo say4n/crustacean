@@ -95,7 +95,7 @@ struct CommentView: View {
         HStack {
             let dateString = Date.parseISO(from: commentHierarchy.createdAt)?.timeAgoDisplay() ?? ""
 
-            HStack {
+            HStack(spacing: 4) {
                 Link(commentHierarchy.commentingUser, destination: URL(string: "https://lobste.rs/~\(commentHierarchy.commentingUser)")!)
 
                 Circle()
