@@ -45,6 +45,13 @@ struct PostDetailView: View {
                     .padding(.top, 0.1)
 
                 byline
+
+                if postData.descriptionPlain != "" {
+                    Divider()
+                        .padding(.bottom, 8)
+
+                    MarkdownView(text: postData.descriptionPlain, score: postData.score)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 8)
@@ -118,6 +125,33 @@ struct PostDetailView: View {
     }
 }
 
-// #Preview {
-//    PostDetailView()
-// }
+#Preview {
+    let data = """
+    {
+      "short_id": "mlly3p",
+      "short_id_url": "https://lobste.rs/s/mlly3p",
+      "created_at": "2025-02-17T04:46:45.000-06:00",
+      "title": "What are you doing this week?",
+      "url": "",
+      "score": 4,
+      "flags": 0,
+      "comment_count": 3,
+      "description": "<p>What are you doing this week? Feel free to share!</p>\\n<p>Keep in mind it’s OK to do nothing at all, too.</p>\\n",
+      "description_plain": "What are you doing this week? Feel free to share!\\r\\n\\r\\nKeep in mind it’s OK to do nothing at all, too.",
+      "comments_url": "https://lobste.rs/s/mlly3p/what_are_you_doing_this_week",
+      "submitter_user": "caius",
+      "user_is_author": true,
+      "tags": [
+        "ask",
+        "programming"
+      ]
+    }
+    """.data(using: .utf8)
+
+    PostDetailView(
+        postData: try! JSONDecoder().decode(
+            Post.self,
+            from: data!
+        )
+    )
+}
