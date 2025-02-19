@@ -71,8 +71,10 @@ struct CommentView: View {
                         ForegroundColor(commentHierarchy.score >= 0 ? Color.primary : Color.primary.opacity(0.4))
                     }
 
-                ForEach(commentHierarchy.children, id: \.shortId) { child in
-                    CommentView(commentHierarchy: child)
+                VStack(spacing: 0) {
+                    ForEach(commentHierarchy.children, id: \.shortId) { child in
+                        CommentView(commentHierarchy: child)
+                    }
                 }
                 .padding(.leading, 8)
                 .overlay(alignment: .leading) {
