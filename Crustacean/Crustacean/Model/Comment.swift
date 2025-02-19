@@ -7,6 +7,10 @@
 
 import Foundation
 
+struct CommentWrapper: Decodable {
+    let comments: [Comment]
+}
+
 class Comment: Decodable {
     let comment: String
     let commentPlain: String

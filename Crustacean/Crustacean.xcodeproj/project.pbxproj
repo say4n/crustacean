@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A22DF6472D640E7E005457C9 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = A22DF6462D640E7E005457C9 /* Flow */; };
-		A299FC572D6529C500DD27F4 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = A299FC562D6529C500DD27F4 /* SwiftyJSON */; };
-		A2F639372D6541EE00769791 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = A2F639362D6541EE00769791 /* MarkdownUI */; };
+		A2598E302D662A7500309B09 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = A2598E2F2D662A7500309B09 /* Flow */; };
+		A2598E332D662A8100309B09 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = A2598E322D662A8100309B09 /* MarkdownUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,9 +28,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A2F639372D6541EE00769791 /* MarkdownUI in Frameworks */,
-				A299FC572D6529C500DD27F4 /* SwiftyJSON in Frameworks */,
-				A22DF6472D640E7E005457C9 /* Flow in Frameworks */,
+				A2598E332D662A8100309B09 /* MarkdownUI in Frameworks */,
+				A2598E302D662A7500309B09 /* Flow in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,9 +81,8 @@
 			);
 			name = Crustacean;
 			packageProductDependencies = (
-				A22DF6462D640E7E005457C9 /* Flow */,
-				A299FC562D6529C500DD27F4 /* SwiftyJSON */,
-				A2F639362D6541EE00769791 /* MarkdownUI */,
+				A2598E2F2D662A7500309B09 /* Flow */,
+				A2598E322D662A8100309B09 /* MarkdownUI */,
 			);
 			productName = Crustacean;
 			productReference = A29CF4B22D62B68C003D8C9D /* Crustacean.app */;
@@ -116,9 +113,8 @@
 			mainGroup = A29CF4A92D62B68C003D8C9D;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				A22DF6452D640E7E005457C9 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
-				A299FC552D6529C500DD27F4 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
-				A2F639342D65415500769791 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+				A2598E2E2D662A7500309B09 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
+				A2598E312D662A8100309B09 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A29CF4B32D62B68C003D8C9D /* Products */;
@@ -296,6 +292,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Crustacean/Preview Content\"";
@@ -306,8 +303,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -315,9 +311,13 @@
 				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = page.sayan.Crustacean;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -326,6 +326,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Crustacean/Preview Content\"";
@@ -336,8 +337,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -345,9 +345,13 @@
 				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = page.sayan.Crustacean;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -375,7 +379,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		A22DF6452D640E7E005457C9 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */ = {
+		A2598E2E2D662A7500309B09 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/tevelee/SwiftUI-Flow";
 			requirement = {
@@ -383,15 +387,7 @@
 				minimumVersion = 3.0.1;
 			};
 		};
-		A299FC552D6529C500DD27F4 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.2;
-			};
-		};
-		A2F639342D65415500769791 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+		A2598E312D662A8100309B09 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
 			requirement = {
@@ -402,19 +398,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A22DF6462D640E7E005457C9 /* Flow */ = {
+		A2598E2F2D662A7500309B09 /* Flow */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A22DF6452D640E7E005457C9 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;
+			package = A2598E2E2D662A7500309B09 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;
 			productName = Flow;
 		};
-		A299FC562D6529C500DD27F4 /* SwiftyJSON */ = {
+		A2598E322D662A8100309B09 /* MarkdownUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A299FC552D6529C500DD27F4 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
-			productName = SwiftyJSON;
-		};
-		A2F639362D6541EE00769791 /* MarkdownUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A2F639342D65415500769791 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
+			package = A2598E312D662A8100309B09 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;
 		};
 /* End XCSwiftPackageProductDependency section */

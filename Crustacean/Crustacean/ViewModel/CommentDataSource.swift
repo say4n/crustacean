@@ -8,7 +8,6 @@
 import Foundation
 import OSLog
 import SwiftUI
-import SwiftyJSON
 
 @MainActor class CommentDataSource: ObservableObject {
     static let shared = CommentDataSource()
@@ -40,17 +39,15 @@ import SwiftyJSON
             return
         }
 
-        logger.info("Parsing response to JSON for \(shortId)")
-        let jsonData = JSON(data!)
-
         logger.info("Decoding list of comments from JSON for \(shortId)")
 
         var fetchedComments: [Comment]?
         do {
             // This is a in-order traversal of comment hierarchy.
-            fetchedComments = try JSONDecoder().decode([Comment].self, from: jsonData["comments"].rawData())
+            let wrappedComments = try JSONDecoder().decode(CommentWrapper.self, from: data!)
+            fetchedComments = wrappedComments.comments
         } catch {
-            logger.error("Could not decode list from JSON: \(error.localizedDescription), \(jsonData["comments"])")
+            logger.error("Could not decode list from JSON: \(error.localizedDescription), \(data?.debugDescription ?? "UNKNOWN")")
 
             DispatchQueue.main.async {
                 self.state = .error
