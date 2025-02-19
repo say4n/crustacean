@@ -34,7 +34,7 @@ struct PostItemView: View {
                         .padding(.top, 0.1)
 
                     byline
-                }
+                }.contentShape(Rectangle())
             }.frame(alignment: .leading)
                 .buttonStyle(.plain)
 
