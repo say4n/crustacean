@@ -51,6 +51,11 @@ struct PostDetailView: View {
             .padding(.bottom)
             .onAppear {
                 Task {
+                    // Don't fetch comments if we have already fetched.
+                    if commentsData.comments.keys.contains(postData.shortId) {
+                        return
+                    }
+
                     try await commentsData.fetchComments(shortId: postData.shortId)
                 }
             }
