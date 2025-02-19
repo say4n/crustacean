@@ -82,6 +82,10 @@ struct PostDetailView: View {
                 Divider()
                 Text("No comments yet.")
             }
+        }.refreshable {
+            Task {
+                try await commentsData.fetchComments(shortId: postData.shortId)
+            }
         }
     }
 
