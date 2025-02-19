@@ -27,7 +27,9 @@ struct CommentView: View {
 
             if commentHierarchy.depth != -1 {
                 Button {
-                    expandComments.toggle()
+                    withAnimation {
+                        expandComments.toggle()
+                    }
                 } label: {
                     byline
                         .contentShape(
@@ -49,7 +51,7 @@ struct CommentView: View {
                 .buttonStyle(.plain)
             }
 
-            if expandComments {
+            Group {
                 Markdown(commentHierarchy.commentPlain)
                     .markdownBlockStyle(\.blockquote) { configuration in
                         configuration.label
@@ -77,7 +79,10 @@ struct CommentView: View {
                         .fill(hierarchyColors[(commentHierarchy.depth + 1) % hierarchyColors.count])
                         .frame(width: 4)
                 }
-            }
+            }.frame(
+                height: expandComments ? nil : 0,
+                alignment: .top
+            ).clipped()
 
             Divider()
         }
