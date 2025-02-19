@@ -57,8 +57,10 @@ struct PostDetailView: View {
 
             switch commentsData.state {
             case .loading:
+                Divider()
                 ProgressView()
             case .error:
+                Divider()
                 Text("Error loading comments.")
             case .loaded:
                 let rootNode = commentsData.comments[postData.shortId]
@@ -68,9 +70,11 @@ struct PostDetailView: View {
                         .transition(.scale)
                 } else {
                     // No comments.
+                    Divider()
                     Text("No comments yet.")
                 }
             case .unknown:
+                Divider()
                 Text("No comments yet.")
             }
         }

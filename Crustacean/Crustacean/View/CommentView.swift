@@ -76,19 +76,25 @@ struct CommentView: View {
                         CommentView(commentHierarchy: child)
                     }
                 }
-                .padding(.leading, 8)
-                .overlay(alignment: .leading) {
-                    Capsule()
-                        .fill(hierarchyColors[(commentHierarchy.depth + 1) % hierarchyColors.count])
-                        .frame(width: 4)
-                }
-            }.frame(
+            }
+            .frame(
                 height: expandComments ? nil : 0,
                 alignment: .top
             ).clipped()
 
-            Divider()
+            if commentHierarchy.depth >= 0 {
+                Divider()
+            }
         }
+        .padding(.leading, commentHierarchy.depth >= 0 ? 8 : 0)
+        .overlay(alignment: .leading) {
+            if commentHierarchy.depth >= 0 {
+                Capsule()
+                    .fill(hierarchyColors[commentHierarchy.depth % hierarchyColors.count])
+                    .frame(width: 4)
+            }
+        }
+        .padding(.bottom, 8)
     }
 
     var byline: some View {
