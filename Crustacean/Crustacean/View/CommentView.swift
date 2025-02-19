@@ -68,6 +68,7 @@ struct CommentView: View {
                             .background(Color.secondary.opacity(0.2))
                     }.markdownTextStyle(\.text) {
                         FontSize(.em(1))
+                        ForegroundColor(commentHierarchy.score >= 0 ? Color.primary : Color.primary.opacity(0.4))
                     }
 
                 ForEach(commentHierarchy.children, id: \.shortId) { child in
