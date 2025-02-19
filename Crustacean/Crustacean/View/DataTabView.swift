@@ -23,6 +23,10 @@ struct DataTabView: View {
                     .padding(.top)
             }
 
+            if dataSource.state[tabType] == .error {
+                Text("Error loading posts, please try again later.")
+            }
+
             ScrollView {
                 LazyVStack {
                     ForEach(items.indices, id: \.self) { index in
