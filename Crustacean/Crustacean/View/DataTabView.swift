@@ -12,21 +12,17 @@ struct DataTabView: View {
     @ObservedObject var dataSource = TabDataSource.shared
     @ObservedObject var networkState = NetworkUtils.shared
 
-    @State var taskId: UUID? = nil
+    @State var taskId: UUID = .init()
 
     var body: some View {
         let items = dataSource.items[tabType] ?? []
 
-        VStack(alignment: .center) {
-            if [DataSourceState.unknown, DataSourceState.loading].contains(dataSource.state[tabType]) {
-                ProgressView()
-            }
-
-            if dataSource.state[tabType] == .error && networkState.isNetworkAvailable {
-                Text("Error loading posts, please try again later.")
-            }
-
+        ZStack(alignment: .top) {
             VStack {
+                if dataSource.state[tabType] == .error && networkState.isNetworkAvailable {
+                    Text("Error loading posts, please try again later.")
+                }
+
                 if !networkState.isNetworkAvailable && dataSource.state[tabType] != .unknown {
                     Text("Network offline, using cached data.")
                         .frame(maxWidth: .infinity)
@@ -50,11 +46,11 @@ struct DataTabView: View {
                     }
                 }
             }
-        }.refreshable {
-            taskId = .init()
-        }
-        .task(id: taskId) {
-            await dataSource.fetchData(for: tabType)
+            .refreshable {
+                taskId = .init()
+            }
+        }.task(id: taskId) {
+            await dataSource.fetchData(for: tabType, force: true)
         }
     }
 }

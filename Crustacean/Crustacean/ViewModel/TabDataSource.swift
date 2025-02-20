@@ -35,17 +35,18 @@ import OSLog
         case .hottest: BASE_URL.appending(path: "page/\(pageIndex).json")
         case .active: BASE_URL.appending(path: "active/page/\(pageIndex).json")
         case .newest: BASE_URL.appending(path: "newest/page/\(pageIndex).json")
+        case .settings: fatalError("Not implemented")
         }
     }
 
     private var logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TabDataSource")
 
-    public func fetchData(for tabType: TabType, cursor: Int = 0) async {
+    public func fetchData(for tabType: TabType, cursor: Int = 0, force: Bool = false) async {
         if state[tabType] == .loading {
             return
         }
 
-        if items[tabType]!.count - cursor > 10 {
+        if items[tabType]!.count - cursor > 10 && !force {
             return
         }
 

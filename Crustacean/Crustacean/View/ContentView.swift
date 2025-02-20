@@ -11,6 +11,7 @@ enum TabType: String {
     case hottest = "Trending"
     case active = "Active"
     case newest = "Newest"
+    case settings = "Settings"
 }
 
 struct Tab: Hashable {
@@ -23,6 +24,7 @@ struct ContentView: View {
         Tab(name: .hottest, icon: "flame"),
         Tab(name: .active, icon: "popcorn"),
         Tab(name: .newest, icon: "mail.stack"),
+        Tab(name: .settings, icon: "gear"),
     ]
 
     @State private var selectedTab = TabType.hottest.rawValue
@@ -33,8 +35,12 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             ForEach(tabs, id: \.self) { tab in
                 NavigationView {
-                    DataTabView(tabType: tab.name)
-                        .navigationTitle(selectedTab)
+                    if tab.name == .settings {
+                        SettingsView()
+                    } else {
+                        DataTabView(tabType: tab.name)
+                            .navigationTitle(selectedTab)
+                    }
                 }
                 .tabItem {
                     Label(tab.name.rawValue, systemImage: tab.icon)
