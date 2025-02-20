@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum TabType: String {
+enum TabType: String, CaseIterable {
     case hottest = "Trending"
     case active = "Active"
     case newest = "Newest"
@@ -27,7 +27,8 @@ struct ContentView: View {
         Tab(name: .settings, icon: "gear"),
     ]
 
-    @State private var selectedTab = TabType.hottest.rawValue
+    @AppStorage("defaultTab") var defaultTab = TabType.hottest
+    @State private var selectedTab: TabType = .hottest
 
     private let dataSource = TabDataSource.shared
 
@@ -37,18 +38,20 @@ struct ContentView: View {
                 NavigationView {
                     if tab.name == .settings {
                         SettingsView()
-                            .navigationTitle(selectedTab)
+                            .navigationTitle(tab.name.rawValue)
                     } else {
                         DataTabView(tabType: tab.name)
-                            .navigationTitle(selectedTab)
+                            .navigationTitle(tab.name.rawValue)
                     }
                 }
                 .tabItem {
                     Label(tab.name.rawValue, systemImage: tab.icon)
                 }
-                .tag(tab.name.rawValue)
+                .tag(tab.name)
             }
         }.onAppear {
+            selectedTab = defaultTab
+
             Task {
                 // Pre-fetch tab data.
                 await (dataSource.fetchData(for: .hottest), dataSource.fetchData(for: .active), dataSource.fetchData(for: .newest))
