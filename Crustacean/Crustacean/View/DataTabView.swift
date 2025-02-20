@@ -10,6 +10,7 @@ import SwiftUI
 struct DataTabView: View {
     let tabType: TabType
     @ObservedObject var dataSource = TabDataSource.shared
+    @ObservedObject var networkState = NetworkUtils.shared
 
     var body: some View {
         let items = dataSource.items[tabType] ?? []
@@ -23,19 +24,31 @@ struct DataTabView: View {
                     .padding(.top)
             }
 
-            if dataSource.state[tabType] == .error {
+            if dataSource.state[tabType] == .error && networkState.isNetworkAvailable {
                 Text("Error loading posts, please try again later.")
             }
 
-            ScrollView {
-                LazyVStack {
-                    ForEach(items.indices, id: \.self) { index in
-                        PostItemView(data: items[index])
-                            .onAppear {
-                                Task {
-                                    await dataSource.fetchData(for: tabType, cursor: index)
+            VStack {
+                if !networkState.isNetworkAvailable {
+                    Text("Network offline, using cached data.")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 4)
+                        .background(Color.secondary.opacity(0.2))
+                        .foregroundColor(.red)
+                        .clipped()
+                        .transition(.slide)
+                }
+
+                ScrollView {
+                    LazyVStack {
+                        ForEach(items.indices, id: \.self) { index in
+                            PostItemView(data: items[index])
+                                .onAppear {
+                                    Task {
+                                        await dataSource.fetchData(for: tabType, cursor: index)
+                                    }
                                 }
-                            }
+                        }
                     }
                 }
             }

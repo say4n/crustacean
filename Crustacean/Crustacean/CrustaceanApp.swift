@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct CrustaceanApp: App {
+    let networkState = NetworkUtils.shared
+
     var body: some Scene {
         WindowGroup {
             ContentView()
