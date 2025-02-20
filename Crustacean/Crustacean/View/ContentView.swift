@@ -37,6 +37,7 @@ struct ContentView: View {
                 NavigationView {
                     if tab.name == .settings {
                         SettingsView()
+                            .navigationTitle(selectedTab)
                     } else {
                         DataTabView(tabType: tab.name)
                             .navigationTitle(selectedTab)
