@@ -38,7 +38,7 @@ class NetworkUtils: ObservableObject {
     }
 }
 
-func fetchDataFromURL(_ url: URL) async throws -> Data {
+func fetchDataFromURL(_ url: URL, httpMethod: String? = nil) async throws -> Data {
     var request = URLRequest(url: url)
     let networkState = NetworkUtils.shared
 
@@ -47,6 +47,9 @@ func fetchDataFromURL(_ url: URL) async throws -> Data {
 
     request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
     request.timeoutInterval = 10
+    if let httpMethod = httpMethod {
+        request.httpMethod = httpMethod
+    }
 
     if networkState.isNetworkAvailable {
         logger.info("Network link up, fetching data from lobste.rs")
@@ -57,6 +60,10 @@ func fetchDataFromURL(_ url: URL) async throws -> Data {
     }
 
     let (data, _) = try await URLSession.shared.data(for: request)
+
+    HTTPCookieStorage.shared.cookies?.forEach { cookie in
+        logger.info("Cookie `\(cookie.name)` expires on \(cookie.expiresDate?.description ?? "UNKNOWN")")
+    }
 
     return data
 }

@@ -5,7 +5,9 @@
 //  Created by Sayan Goswami on 20/02/2025.
 //
 
+import OSLog
 import SwiftUI
+import WebKit
 
 enum Appearance: String, CaseIterable {
     case automatic = "Automatic"
@@ -14,13 +16,45 @@ enum Appearance: String, CaseIterable {
 }
 
 struct SettingsView: View {
-    @AppStorage("appAppearance") var appAppearance: Appearance = .automatic
-    @AppStorage("defaultTab") var defaultTab: TabType = .hottest
+    @AppStorage("appAppearance") private var appAppearance: Appearance = .automatic
+    @AppStorage("defaultTab") private var defaultTab: TabType = .hottest
+    @Environment(\.openURL) var openURL
 
     private let tabOptions = TabType.allCases.filter { $0 != .settings }
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "SettingsView")
+
+    @State private var showLoginView = false
+
+    private var isLoggedIn: Bool {
+        return HTTPCookieStorage.shared.cookies?.filter { $0.name == "lobster_trap" }.count ?? 0 > 0
+    }
 
     var body: some View {
         Form {
+            Section {
+                if !isLoggedIn {
+                    Button("Login to Lobste.rs") {
+                        showLoginView = true
+                    }
+                } else {
+                    Button("Logout", role: .destructive) {
+                        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+                        logger.info("Cookie storage cleared")
+
+                        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+                            for record in records {
+                                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+                                logger.info("Cookie \(record) deleted")
+                            }
+                        }
+                    }
+                }
+            } header: {
+                Text("Account")
+            } footer: {
+                Text("Login opens a browser window to Lobste.rs for you to login. Once you're logged in, your credentials are stored locally on your device.")
+            }
+
             Section {
                 Picker("Theme", selection: $appAppearance) {
                     ForEach(Appearance.allCases, id: \.self) { appearance in
@@ -57,9 +91,16 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                     }
                 }
+
+                Button("Support") {
+                    openURL(URL(string: "https://crustacean.optionalstudio.work")!)
+                }
             } header: {
                 Text("Information")
             }
+        }.sheet(isPresented: $showLoginView) {
+            WebView(url: URL(string: "https://lobste.rs/login")!, showLoginView: $showLoginView)
+                .ignoresSafeArea(.all)
         }
     }
 }

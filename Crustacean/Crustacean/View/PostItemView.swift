@@ -41,7 +41,6 @@ struct PostItemView: View {
             Divider()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal)
         .padding(.bottom)
     }
 

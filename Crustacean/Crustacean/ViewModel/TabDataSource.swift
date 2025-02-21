@@ -50,6 +50,10 @@ import OSLog
             return
         }
 
+        if force {
+            pageByTab[tabType] = 1
+        }
+
         DispatchQueue.main.async {
             self.state[tabType] = .loading
         }
@@ -63,8 +67,13 @@ import OSLog
                 let existingPostIds = self.items[tabType]?.map { $0.shortId }
                 let filteredItems: [Post] = fetchedItems.filter { existingPostIds?.contains($0.shortId) != true }
 
-                self.logger.info("Appended \(filteredItems.count) \(tabType.rawValue) posts in page \(_page)")
-                self.items[tabType]?.append(contentsOf: filteredItems)
+                if !force {
+                    self.logger.info("Appended \(filteredItems.count) \(tabType.rawValue) posts in page \(_page)")
+                    self.items[tabType]?.append(contentsOf: filteredItems)
+                } else {
+                    self.logger.info("Updated \(fetchedItems.count) \(tabType.rawValue) posts in page \(_page)")
+                    self.items[tabType] = fetchedItems
+                }
 
                 self.pageByTab[tabType] = (self.pageByTab[tabType] ?? 1) + 1
             }

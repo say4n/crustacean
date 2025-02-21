@@ -27,7 +27,7 @@ struct ContentView: View {
         Tab(name: .settings, icon: "gear"),
     ]
 
-    @AppStorage("defaultTab") var defaultTab = TabType.hottest
+    @AppStorage("defaultTab") private var defaultTab = TabType.hottest
     @State private var selectedTab: TabType = .hottest
 
     private let dataSource = TabDataSource.shared
