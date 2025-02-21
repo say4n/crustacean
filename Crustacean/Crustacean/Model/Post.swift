@@ -12,7 +12,7 @@ struct Post: Decodable {
     let description: String
     let descriptionPlain: String
     let flags: Int
-    let score: Int
+    var score: Int
     let shortId: String
     let shortIdUrl: String
     let submitterUser: String
