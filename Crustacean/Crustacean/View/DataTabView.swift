@@ -10,6 +10,8 @@ import SwiftUI
 
 struct DataTabView: View {
     let tabType: TabType
+
+    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     @ObservedObject var dataSource = TabDataSource.shared
     @ObservedObject var networkState = NetworkUtils.shared
 
@@ -44,42 +46,44 @@ struct DataTabView: View {
                                     await dataSource.fetchData(for: tabType, cursor: index)
                                 }
                             }
-                            .swipeActions {
-                                let post: Post = items[index]
+                            .if(isLoggedIn) { view in
+                                view.swipeActions {
+                                    let post: Post = items[index]
 
-                                Button {
-                                    logger.info("Upvote")
-                                    Task {
-                                        let upvoteURL = BASE_URL.appending(path: "/stories/\(post.shortId)/upvote")
-                                        do {
-                                            let response = try await fetchDataFromURL(upvoteURL, httpMethod: "POST")
-                                            dataSource.items[tabType]?[index].score += 1
-                                            logger.info("Response from upvote: \(String(data: response, encoding: .utf8) ?? "UNKNOWN")")
-                                        } catch {
-                                            logger.error("Could not upvote story: \(error)")
+                                    Button {
+                                        logger.info("Upvote")
+                                        Task {
+                                            let upvoteURL = BASE_URL.appending(path: "/stories/\(post.shortId)/upvote")
+                                            do {
+                                                let response = try await fetchDataFromURL(upvoteURL, httpMethod: "POST")
+                                                dataSource.items[tabType]?[index].score += 1
+                                                logger.info("Response from upvote: \(String(data: response, encoding: .utf8) ?? "UNKNOWN")")
+                                            } catch {
+                                                logger.error("Could not upvote story: \(error)")
+                                            }
                                         }
+                                    } label: {
+                                        Label("Upvote", systemImage: "arrowshape.up.fill")
                                     }
-                                } label: {
-                                    Label("Upvote", systemImage: "arrowshape.up.fill")
-                                }
-                                .tint(.green)
+                                    .tint(.green)
 
-                                Button {
-                                    logger.info("Unvote")
-                                    Task {
-                                        let unvoteURL = BASE_URL.appending(path: "/stories/\(post.shortId)/unvote")
-                                        do {
-                                            let response = try await fetchDataFromURL(unvoteURL, httpMethod: "POST")
-                                            dataSource.items[tabType]?[index].score -= 1
-                                            logger.info("Response from unvote: \(String(data: response, encoding: .utf8) ?? "UNKNOWN")")
-                                        } catch {
-                                            logger.error("Could not unvote story: \(error)")
+                                    Button {
+                                        logger.info("Unvote")
+                                        Task {
+                                            let unvoteURL = BASE_URL.appending(path: "/stories/\(post.shortId)/unvote")
+                                            do {
+                                                let response = try await fetchDataFromURL(unvoteURL, httpMethod: "POST")
+                                                dataSource.items[tabType]?[index].score -= 1
+                                                logger.info("Response from unvote: \(String(data: response, encoding: .utf8) ?? "UNKNOWN")")
+                                            } catch {
+                                                logger.error("Could not unvote story: \(error)")
+                                            }
                                         }
+                                    } label: {
+                                        Label("Unvote", systemImage: "arrowshape.up")
                                     }
-                                } label: {
-                                    Label("Unvote", systemImage: "arrowshape.up")
+                                    .tint(.red)
                                 }
-                                .tint(.red)
                             }
                     }
                 }

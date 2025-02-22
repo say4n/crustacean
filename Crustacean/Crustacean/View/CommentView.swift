@@ -21,6 +21,8 @@ struct CommentView: View {
 
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "CommentView")
 
+    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
+
     @State private var localScore = 0
     @State private var expandComments: Bool = true
 
@@ -107,44 +109,46 @@ struct CommentView: View {
                     Text(localScore.description)
                 }
 
-                Circle()
-                    .frame(width: 4, height: 4)
-                    .foregroundColor(Color.primary.opacity(0.4))
+                if isLoggedIn {
+                    Circle()
+                        .frame(width: 4, height: 4)
+                        .foregroundColor(Color.primary.opacity(0.4))
 
-                Menu {
-                    Button("Upvote") {
-                        Task {
-                            logger.info("Upvote")
+                    Menu {
+                        Button("Upvote") {
                             Task {
-                                let upvoteURL = BASE_URL.appending(path: "/comments/\(commentHierarchy.shortId)/upvote")
-                                do {
-                                    let response = try await fetchDataFromURL(upvoteURL, httpMethod: "POST")
-                                    localScore += 1
-                                    logger.info("Response from upvote: \(String(data: response, encoding: .utf8) ?? "UNKNOWN")")
-                                } catch {
-                                    logger.error("Could not upvote story: \(error)")
+                                logger.info("Upvote")
+                                Task {
+                                    let upvoteURL = BASE_URL.appending(path: "/comments/\(commentHierarchy.shortId)/upvote")
+                                    do {
+                                        let response = try await fetchDataFromURL(upvoteURL, httpMethod: "POST")
+                                        localScore += 1
+                                        logger.info("Response from upvote: \(String(data: response, encoding: .utf8) ?? "UNKNOWN")")
+                                    } catch {
+                                        logger.error("Could not upvote story: \(error)")
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    Button("Unvote") {
-                        Task {
-                            logger.info("Unvote")
+                        Button("Unvote") {
                             Task {
-                                let upvoteURL = BASE_URL.appending(path: "/comments/\(commentHierarchy.shortId)/unvote")
-                                do {
-                                    let response = try await fetchDataFromURL(upvoteURL, httpMethod: "POST")
-                                    localScore -= 1
-                                    logger.info("Response from upvote: \(String(data: response, encoding: .utf8) ?? "UNKNOWN")")
-                                } catch {
-                                    logger.error("Could not upvote story: \(error)")
+                                logger.info("Unvote")
+                                Task {
+                                    let upvoteURL = BASE_URL.appending(path: "/comments/\(commentHierarchy.shortId)/unvote")
+                                    do {
+                                        let response = try await fetchDataFromURL(upvoteURL, httpMethod: "POST")
+                                        localScore -= 1
+                                        logger.info("Response from upvote: \(String(data: response, encoding: .utf8) ?? "UNKNOWN")")
+                                    } catch {
+                                        logger.error("Could not upvote story: \(error)")
+                                    }
                                 }
                             }
                         }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
                     }
-                } label: {
-                    Image(systemName: "ellipsis.circle")
                 }
             }
 

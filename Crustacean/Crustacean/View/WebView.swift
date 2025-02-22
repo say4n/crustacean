@@ -13,6 +13,8 @@ struct WebView: UIViewRepresentable {
     let url: URL
     @Binding var showLoginView: Bool
 
+    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
+
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "WebView")
 
     func makeCoordinator() -> Coordinator {
@@ -54,6 +56,7 @@ struct WebView: UIViewRepresentable {
                         }
                     }
 
+                    parent.isLoggedIn = true
                     parent.showLoginView = false
                     return
                 }

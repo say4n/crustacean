@@ -18,6 +18,7 @@ enum Appearance: String, CaseIterable {
 struct SettingsView: View {
     @AppStorage("appAppearance") private var appAppearance: Appearance = .automatic
     @AppStorage("defaultTab") private var defaultTab: TabType = .hottest
+    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     @Environment(\.openURL) var openURL
 
     private let tabOptions = TabType.allCases.filter { $0 != .settings }
@@ -25,7 +26,7 @@ struct SettingsView: View {
 
     @State private var showLoginView = false
 
-    private var isLoggedIn: Bool {
+    private func getLoginState() -> Bool {
         return HTTPCookieStorage.shared.cookies?.filter { $0.name == "lobster_trap" }.count ?? 0 > 0
     }
 
@@ -47,6 +48,8 @@ struct SettingsView: View {
                                 logger.info("Cookie \(record) deleted")
                             }
                         }
+
+                        isLoggedIn = false
                     }
                 }
             } header: {
@@ -98,9 +101,13 @@ struct SettingsView: View {
             } header: {
                 Text("Information")
             }
-        }.sheet(isPresented: $showLoginView) {
+        }
+        .sheet(isPresented: $showLoginView) {
             WebView(url: URL(string: "https://lobste.rs/login")!, showLoginView: $showLoginView)
                 .ignoresSafeArea(.all)
+        }
+        .onAppear {
+            isLoggedIn = getLoginState()
         }
     }
 }
