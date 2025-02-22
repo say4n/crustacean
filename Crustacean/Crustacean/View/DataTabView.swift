@@ -80,7 +80,7 @@ struct DataTabView: View {
                                             }
                                         }
                                     } label: {
-                                        Label("Unvote", systemImage: "arrowshape.up")
+                                        Label("Unvote", image: "Unvote")
                                     }
                                     .tint(.red)
                                 }
