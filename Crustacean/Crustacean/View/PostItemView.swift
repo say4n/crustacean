@@ -35,13 +35,11 @@ struct PostItemView: View {
 
                     byline
                 }.contentShape(Rectangle())
-            }.frame(alignment: .leading)
-                .buttonStyle(.plain)
-
-            Divider()
+            }
+            .frame(alignment: .leading)
+            .buttonStyle(.plain)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.bottom)
     }
 
     var byline: some View {

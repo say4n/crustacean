@@ -5,6 +5,7 @@
 //  Created by Sayan Goswami on 18/02/2025.
 //
 
+import OSLog
 import SwiftUI
 
 struct CommentView: View {
@@ -18,7 +19,10 @@ struct CommentView: View {
         .mint,
     ]
 
-    @State var expandComments: Bool = true
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "CommentView")
+
+    @State private var localScore = 0
+    @State private var expandComments: Bool = true
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -42,7 +46,6 @@ struct CommentView: View {
                                 .fill(Color.secondary.opacity(0.1))
                                 .frame(height: 2)
                         }
-
                         .clipShape(
                             RoundedRectangle(cornerRadius: 4)
                         )
@@ -77,28 +80,71 @@ struct CommentView: View {
             }
         }
         .padding(.bottom, 8)
+        .onAppear {
+            localScore = commentHierarchy.score
+        }
     }
 
     var byline: some View {
         HStack {
             let dateString = Date.parseISO(from: commentHierarchy.createdAt)?.timeAgoDisplay() ?? ""
 
-            HStack(spacing: 4) {
+            HStack(spacing: 8) {
                 Link(commentHierarchy.commentingUser, destination: URL(string: "https://lobste.rs/~\(commentHierarchy.commentingUser)")!)
 
                 Circle()
                     .frame(width: 4, height: 4)
-                    .foregroundColor(Color.primary)
+                    .foregroundColor(Color.primary.opacity(0.4))
 
                 Link(dateString, destination: URL(string: commentHierarchy.shortIdUrl)!)
 
                 Circle()
                     .frame(width: 4, height: 4)
-                    .foregroundColor(Color.primary)
+                    .foregroundColor(Color.primary.opacity(0.4))
 
-                HStack {
+                HStack(spacing: 2) {
                     Image(systemName: "arrow.up")
-                    Text(commentHierarchy.score.description)
+                    Text(localScore.description)
+                }
+
+                Circle()
+                    .frame(width: 4, height: 4)
+                    .foregroundColor(Color.primary.opacity(0.4))
+
+                Menu {
+                    Button("Upvote") {
+                        Task {
+                            logger.info("Upvote")
+                            Task {
+                                let upvoteURL = BASE_URL.appending(path: "/comments/\(commentHierarchy.shortId)/upvote")
+                                do {
+                                    let response = try await fetchDataFromURL(upvoteURL, httpMethod: "POST")
+                                    localScore += 1
+                                    logger.info("Response from upvote: \(String(data: response, encoding: .utf8) ?? "UNKNOWN")")
+                                } catch {
+                                    logger.error("Could not upvote story: \(error)")
+                                }
+                            }
+                        }
+                    }
+
+                    Button("Unvote") {
+                        Task {
+                            logger.info("Unvote")
+                            Task {
+                                let upvoteURL = BASE_URL.appending(path: "/comments/\(commentHierarchy.shortId)/unvote")
+                                do {
+                                    let response = try await fetchDataFromURL(upvoteURL, httpMethod: "POST")
+                                    localScore -= 1
+                                    logger.info("Response from upvote: \(String(data: response, encoding: .utf8) ?? "UNKNOWN")")
+                                } catch {
+                                    logger.error("Could not upvote story: \(error)")
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
             }
 

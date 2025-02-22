@@ -22,7 +22,7 @@ class Comment: Decodable {
     let isModerated: Bool
     let lastEditedAt: String
     let parentComment: String?
-    let score: Int
+    var score: Int
     let shortId: String
     let shortIdUrl: String
     let url: String
