@@ -116,7 +116,7 @@ struct CommentView: View {
                         .foregroundColor(Color.primary.opacity(0.4))
 
                     Menu {
-                        Button("Upvote") {
+                        Button {
                             Task {
                                 logger.info("Upvote")
                                 Task {
@@ -126,9 +126,12 @@ struct CommentView: View {
                                     }
                                 }
                             }
-                        }.disabled(isUpvoted == true)
+                        } label: {
+                            Label("Upvote", systemImage: "arrowshape.up.fill")
+                        }
+                        .disabled(isUpvoted == true)
 
-                        Button("Unvote") {
+                        Button {
                             Task {
                                 logger.info("Unvote")
                                 Task {
@@ -138,8 +141,17 @@ struct CommentView: View {
                                     }
                                 }
                             }
+                        } label: {
+                            Label("Unvote", image: "Unvote")
                         }
                         .disabled(isUpvoted == false)
+
+                        Button {
+                            logger.info("Flag")
+                            Task {}
+                        } label: {
+                            Label("Flag", systemImage: "ellipsis")
+                        }
                     } label: {
                         Image(systemName: "ellipsis.circle")
                     }

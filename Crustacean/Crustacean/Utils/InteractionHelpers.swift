@@ -22,6 +22,51 @@ enum VoteResponse: Equatable {
     case error(String)
 }
 
+/// See: https://github.com/lobsters/lobsters/blob/55bfc00be02f6df5f008b69f6cec26a3219a1dd0/app/models/vote.rb#L26-L32
+enum CommentFlagReasons: String {
+    case offTopic = "Off-topic"
+    case meToo = "Me-too"
+    case troll = "Troll"
+    case unkind = "Unkind"
+    case spam = "Spam"
+    
+    var intValue: Int {
+        switch self {
+        case .offTopic:
+            return 0
+        case .meToo:
+            return 1
+        case .troll:
+            return 2
+        case .unkind:
+            return 3
+        case .spam:
+            return 4
+        }
+    }
+}
+
+/// See: https://github.com/lobsters/lobsters/blob/55bfc00be02f6df5f008b69f6cec26a3219a1dd0/app/models/vote.rb#L39-L44
+enum StoryFlagReasons: String {
+    case offTopic = "Off-topic"
+    case alreadyPosted = "Already Posted"
+    case brokenLink = "Broken Link"
+    case spam = "Spam"
+    
+    var intValue: Int {
+        switch self {
+        case .offTopic:
+            return 0
+        case .alreadyPosted:
+            return 1
+        case .brokenLink:
+            return 2
+        case .spam:
+            return 3
+        }
+    }
+}
+
 func castVote(shortId: String, entity: EntityType, action: ActionType) async -> VoteResponse? {
     let url = BASE_URL.appending(path: "/\(entity)/\(shortId)/\(action)")
     var voteResponse: VoteResponse?

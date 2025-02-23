@@ -47,7 +47,7 @@ struct DataTabView: View {
                                 }
                             }
                             .if(isLoggedIn) { view in
-                                view.swipeActions {
+                                view.swipeActions(edge: .trailing) {
                                     let post: Post = items[index]
 
                                     Button {
@@ -83,6 +83,14 @@ struct DataTabView: View {
                                         Label("Unvote", image: "Unvote")
                                     }
                                     .tint(.red)
+
+                                    Button {
+                                        logger.info("Flag")
+                                        Task {}
+                                    } label: {
+                                        Label("Flag", systemImage: "ellipsis.circle")
+                                    }
+                                    .tint(.gray)
                                 }
                             }
                     }
