@@ -146,9 +146,10 @@ struct CommentView: View {
                         }
                         .disabled(isUpvoted == false)
 
-                        Button {
-                            logger.info("Flag")
-                            Task {}
+                        Menu {
+                            ForEach(CommentFlagReasons.allCases) { reason in
+                                Button(reason.rawValue) {}
+                            }
                         } label: {
                             Label("Flag", systemImage: "ellipsis")
                         }

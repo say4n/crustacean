@@ -23,13 +23,17 @@ enum VoteResponse: Equatable {
 }
 
 /// See: https://github.com/lobsters/lobsters/blob/55bfc00be02f6df5f008b69f6cec26a3219a1dd0/app/models/vote.rb#L26-L32
-enum CommentFlagReasons: String {
+enum CommentFlagReasons: String, CaseIterable, Identifiable {
+    var id: Self {
+        return self
+    }
+
     case offTopic = "Off-topic"
     case meToo = "Me-too"
     case troll = "Troll"
     case unkind = "Unkind"
     case spam = "Spam"
-    
+
     var intValue: Int {
         switch self {
         case .offTopic:
@@ -47,12 +51,12 @@ enum CommentFlagReasons: String {
 }
 
 /// See: https://github.com/lobsters/lobsters/blob/55bfc00be02f6df5f008b69f6cec26a3219a1dd0/app/models/vote.rb#L39-L44
-enum StoryFlagReasons: String {
+enum StoryFlagReasons: String, CaseIterable {
     case offTopic = "Off-topic"
     case alreadyPosted = "Already Posted"
     case brokenLink = "Broken Link"
     case spam = "Spam"
-    
+
     var intValue: Int {
         switch self {
         case .offTopic:
