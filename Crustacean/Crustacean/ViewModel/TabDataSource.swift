@@ -28,9 +28,7 @@ import OSLog
         TabType.newest: 1,
     ]
 
-    private func getEndpoint(for tabType: TabType) -> URL {
-        let pageIndex = pageByTab[tabType] ?? 1
-
+    private func getEndpoint(for tabType: TabType, pageIndex: Int = 1) -> URL {
         return switch tabType {
         case .hottest: BASE_URL.appending(path: "page/\(pageIndex).json")
         case .active: BASE_URL.appending(path: "active/page/\(pageIndex).json")
@@ -50,16 +48,23 @@ import OSLog
             return
         }
 
-        if force {
-            pageByTab[tabType] = 1
-        }
-
         DispatchQueue.main.async {
             self.state[tabType] = .loading
         }
 
         do {
-            let fetchedItems = try await fetchHotPosts(for: tabType)
+            var fetchedItems = [Post]()
+
+            if force {
+                let pageRangeToRefresh = 1 ... (pageByTab[tabType] ?? 1)
+                for pageIndex in pageRangeToRefresh {
+                    let fetchedItemsByPage = try await fetchHotPosts(for: tabType, pageIndex: pageIndex)
+                    fetchedItems.append(contentsOf: fetchedItemsByPage)
+                }
+            } else {
+                fetchedItems = try await fetchHotPosts(for: tabType, pageIndex: pageByTab[tabType] ?? 1)
+            }
+
             let _page = pageByTab[tabType] ?? -1
             logger.info("Fetched \(fetchedItems.count) \(tabType.rawValue) posts in page \(_page)")
 
@@ -89,9 +94,9 @@ import OSLog
         }
     }
 
-    private func fetchHotPosts(for tabType: TabType) async throws -> [Post] {
+    private func fetchHotPosts(for tabType: TabType, pageIndex: Int) async throws -> [Post] {
         do {
-            let endpoint = getEndpoint(for: tabType)
+            let endpoint = getEndpoint(for: tabType, pageIndex: pageIndex)
             let data = try await fetchDataFromURL(endpoint)
             let decodedData = try JSONDecoder().decode([Post].self, from: data)
 

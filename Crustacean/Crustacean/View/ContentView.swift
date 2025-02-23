@@ -54,7 +54,7 @@ struct ContentView: View {
 
             Task {
                 // Pre-fetch tab data.
-                await (dataSource.fetchData(for: .hottest), dataSource.fetchData(for: .active), dataSource.fetchData(for: .newest))
+                await(dataSource.fetchData(for: .hottest), dataSource.fetchData(for: .active), dataSource.fetchData(for: .newest))
             }
         }
     }
