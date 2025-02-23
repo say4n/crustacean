@@ -6,11 +6,8 @@
 //
 
 import Network
-import OSLog
 import SwiftUI
 import UIKit
-
-private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "FetchUtils")
 
 class NetworkUtils: ObservableObject {
     static let shared = NetworkUtils()

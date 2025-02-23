@@ -20,6 +20,7 @@ struct Post: Decodable {
     let title: String
     let url: String
     let userIsAuthor: Bool
+    var isUpvoted: Bool? = nil
 }
 
 extension Post {

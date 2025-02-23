@@ -53,13 +53,13 @@ struct DataTabView: View {
                                     Button {
                                         logger.info("Upvote")
                                         Task {
-                                            let upvoteURL = BASE_URL.appending(path: "/stories/\(post.shortId)/upvote")
-                                            do {
-                                                let response = try await fetchDataFromURL(upvoteURL, httpMethod: "POST")
+                                            if dataSource.items[tabType]?[index].isUpvoted == true {
+                                                return
+                                            }
+
+                                            if let voteResponse = await castVote(shortId: post.shortId, entity: .stories, action: .upvote), voteResponse == .success {
+                                                dataSource.items[tabType]?[index].isUpvoted = true
                                                 dataSource.items[tabType]?[index].score += 1
-                                                logger.info("Response from upvote: \(String(data: response, encoding: .utf8) ?? "UNKNOWN")")
-                                            } catch {
-                                                logger.error("Could not upvote story: \(error)")
                                             }
                                         }
                                     } label: {
@@ -70,13 +70,13 @@ struct DataTabView: View {
                                     Button {
                                         logger.info("Unvote")
                                         Task {
-                                            let unvoteURL = BASE_URL.appending(path: "/stories/\(post.shortId)/unvote")
-                                            do {
-                                                let response = try await fetchDataFromURL(unvoteURL, httpMethod: "POST")
+                                            if dataSource.items[tabType]?[index].isUpvoted == false {
+                                                return
+                                            }
+
+                                            if let voteResponse = await castVote(shortId: post.shortId, entity: .stories, action: .unvote), voteResponse == .success {
+                                                dataSource.items[tabType]?[index].isUpvoted = false
                                                 dataSource.items[tabType]?[index].score -= 1
-                                                logger.info("Response from unvote: \(String(data: response, encoding: .utf8) ?? "UNKNOWN")")
-                                            } catch {
-                                                logger.error("Could not unvote story: \(error)")
                                             }
                                         }
                                     } label: {

@@ -24,6 +24,7 @@ struct CommentView: View {
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
 
     @State private var localScore = 0
+    @State private var isUpvoted: Bool? = nil
     @State private var expandComments: Bool = true
 
     var body: some View {
@@ -119,33 +120,26 @@ struct CommentView: View {
                             Task {
                                 logger.info("Upvote")
                                 Task {
-                                    let upvoteURL = BASE_URL.appending(path: "/comments/\(commentHierarchy.shortId)/upvote")
-                                    do {
-                                        let response = try await fetchDataFromURL(upvoteURL, httpMethod: "POST")
+                                    if let voteResponse = await castVote(shortId: commentHierarchy.shortId, entity: .comments, action: .upvote), voteResponse == .success {
+                                        isUpvoted = true
                                         localScore += 1
-                                        logger.info("Response from upvote: \(String(data: response, encoding: .utf8) ?? "UNKNOWN")")
-                                    } catch {
-                                        logger.error("Could not upvote story: \(error)")
                                     }
                                 }
                             }
-                        }
+                        }.disabled(isUpvoted == true)
 
                         Button("Unvote") {
                             Task {
                                 logger.info("Unvote")
                                 Task {
-                                    let upvoteURL = BASE_URL.appending(path: "/comments/\(commentHierarchy.shortId)/unvote")
-                                    do {
-                                        let response = try await fetchDataFromURL(upvoteURL, httpMethod: "POST")
+                                    if let voteResponse = await castVote(shortId: commentHierarchy.shortId, entity: .comments, action: .unvote), voteResponse == .success {
+                                        isUpvoted = false
                                         localScore -= 1
-                                        logger.info("Response from upvote: \(String(data: response, encoding: .utf8) ?? "UNKNOWN")")
-                                    } catch {
-                                        logger.error("Could not upvote story: \(error)")
                                     }
                                 }
                             }
                         }
+                        .disabled(isUpvoted == false)
                     } label: {
                         Image(systemName: "ellipsis.circle")
                     }
