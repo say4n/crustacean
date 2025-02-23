@@ -15,7 +15,8 @@ struct DataTabView: View {
     @ObservedObject var dataSource = TabDataSource.shared
     @ObservedObject var networkState = NetworkUtils.shared
 
-    @State var taskId: UUID = .init()
+    @State private var taskId: UUID = .init()
+    @State private var showFlagAlert = false
 
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "DataTabView")
 
@@ -86,11 +87,20 @@ struct DataTabView: View {
 
                                     Button {
                                         logger.info("Flag")
-                                        Task {}
+                                        Task {
+                                            logger.info("Flag")
+                                            showFlagAlert = true
+                                        }
                                     } label: {
                                         Label("Flag", systemImage: "ellipsis.circle")
                                     }
                                     .tint(.gray)
+                                }
+                                .alert("Flag", isPresented: $showFlagAlert) {
+                                    ForEach(StoryFlagReasons.allCases) { reason in
+                                        Button(reason.rawValue) {}
+                                    }
+                                    Button("Cancel", role: .cancel) {}
                                 }
                             }
                     }

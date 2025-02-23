@@ -51,7 +51,11 @@ enum CommentFlagReasons: String, CaseIterable, Identifiable {
 }
 
 /// See: https://github.com/lobsters/lobsters/blob/55bfc00be02f6df5f008b69f6cec26a3219a1dd0/app/models/vote.rb#L39-L44
-enum StoryFlagReasons: String, CaseIterable {
+enum StoryFlagReasons: String, CaseIterable, Identifiable {
+    var id: Self {
+        return self
+    }
+
     case offTopic = "Off-topic"
     case alreadyPosted = "Already Posted"
     case brokenLink = "Broken Link"

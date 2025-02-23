@@ -26,6 +26,7 @@ struct CommentView: View {
     @State private var localScore = 0
     @State private var isUpvoted: Bool? = nil
     @State private var expandComments: Bool = true
+    @State private var showFlagAlert: Bool = false
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -146,15 +147,21 @@ struct CommentView: View {
                         }
                         .disabled(isUpvoted == false)
 
-                        Menu {
-                            ForEach(CommentFlagReasons.allCases) { reason in
-                                Button(reason.rawValue) {}
-                            }
+                        Button {
+                            logger.info("Flag")
+                            showFlagAlert = true
                         } label: {
                             Label("Flag", systemImage: "ellipsis")
                         }
+
                     } label: {
                         Image(systemName: "ellipsis.circle")
+                    }
+                    .alert("Flag", isPresented: $showFlagAlert) {
+                        ForEach(CommentFlagReasons.allCases) { reason in
+                            Button(reason.rawValue) {}
+                        }
+                        Button("Cancel", role: .cancel) {}
                     }
                 }
             }
