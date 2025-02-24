@@ -19,7 +19,8 @@ struct SettingsView: View {
     @AppStorage("appAppearance") private var appAppearance: Appearance = .automatic
     @AppStorage("defaultTab") private var defaultTab: TabType = .hottest
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
-    @Environment(\.openURL) var openURL
+
+    @Environment(\.openURL) private var openURL
 
     private let tabOptions = TabType.allCases.filter { $0 != .settings }
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "SettingsView")
@@ -34,11 +35,13 @@ struct SettingsView: View {
         Form {
             Section {
                 if !isLoggedIn {
-                    Button("Login to Lobste.rs") {
+                    Button {
                         showLoginView = true
+                    } label: {
+                        Label("Login to Lobste.rs", systemImage: "person.crop.circle")
                     }
                 } else {
-                    Button("Logout", role: .destructive) {
+                    Button(role: .destructive) {
                         HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
                         logger.info("Cookie storage cleared")
 
@@ -50,6 +53,9 @@ struct SettingsView: View {
                         }
 
                         isLoggedIn = false
+                    } label: {
+                        Label("Logout", systemImage: "person.crop.circle")
+                            .foregroundStyle(.red)
                     }
                 }
             } header: {
@@ -59,25 +65,41 @@ struct SettingsView: View {
             }
 
             Section {
-                Picker("Theme", selection: $appAppearance) {
+                Picker(selection: $appAppearance) {
                     ForEach(Appearance.allCases, id: \.self) { appearance in
                         Text(appearance.rawValue)
                             .tag(appearance)
                     }
+                } label: {
+                    Label("Theme", systemImage: "paintpalette")
                 }
 
-                Picker("Default Tab", selection: $defaultTab) {
+                Picker(selection: $defaultTab) {
                     ForEach(tabOptions, id: \.self) { tab in
                         Text(tab.rawValue)
                             .tag(tab)
                     }
+                } label: {
+                    Label("Default Tab", systemImage: "square.stack.3d.up")
                 }
             } header: {
                 Text("Preferences")
             }
 
             Section {
-                NavigationLink("About") {
+                Button {
+                    openURL(URL(string: "https://lobste.rs/about")!)
+                } label: {
+                    Label("Terms of Service (Lobste.rs)", systemImage: "text.document")
+                }
+
+                Button {
+                    openURL(URL(string: "https://crustacean.optionalstudio.work")!)
+                } label: {
+                    Label("Support", systemImage: "ladybug")
+                }
+
+                NavigationLink {
                     VStack {
                         Image("Icon")
                             .resizable()
@@ -93,18 +115,27 @@ struct SettingsView: View {
                         .font(.callout)
                         .foregroundStyle(.secondary)
                     }
-                }
-
-                Button("Support") {
-                    openURL(URL(string: "https://crustacean.optionalstudio.work")!)
+                } label: {
+                    Label("About", systemImage: "info.circle")
                 }
             } header: {
                 Text("Information")
             }
         }
         .sheet(isPresented: $showLoginView) {
-            WebView(url: URL(string: "https://lobste.rs/login")!, showLoginView: $showLoginView)
-                .ignoresSafeArea(.all)
+            NavigationStack {
+                WebView(url: URL(string: "https://lobste.rs/login")!, showLoginView: $showLoginView)
+                    .ignoresSafeArea(.all)
+                    .navigationTitle("Login with Lobste.rs")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Cancel") {
+                                showLoginView = false
+                            }
+                        }
+                    }
+            }
         }
         .onAppear {
             isLoggedIn = getLoginState()
