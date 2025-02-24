@@ -38,7 +38,8 @@ struct MultipartFormDataRequest {
 
     private func dataFormField(named name: String,
                                data: Data,
-                               mimeType: String) -> Data {
+                               mimeType: String) -> Data
+    {
         let fieldData = NSMutableData()
 
         fieldData.append("--\(boundary)\r\n")
@@ -50,7 +51,7 @@ struct MultipartFormDataRequest {
 
         return fieldData as Data
     }
-    
+
     func asURLRequest() -> URLRequest {
         var request = URLRequest(url: url)
 
@@ -64,9 +65,9 @@ struct MultipartFormDataRequest {
 }
 
 extension NSMutableData {
-  func append(_ string: String) {
-    if let data = string.data(using: .utf8) {
-      self.append(data)
+    func append(_ string: String) {
+        if let data = string.data(using: .utf8) {
+            append(data)
+        }
     }
-  }
 }

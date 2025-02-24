@@ -38,13 +38,13 @@ class NetworkUtils: ObservableObject {
 extension URLRequest {
     func bless() async -> URLRequest {
         var request = self
-        
+
         let versionString = Bundle.main.releaseVersionNumber ?? "Unknown"
         let userAgent = "Crustacean/\(versionString) (\(await UIDevice.current.model); iOS \(await UIDevice.current.systemVersion); https://crustacean.optionalstudio.work)"
 
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
         request.timeoutInterval = 10
-        
+
         return request
     }
 }
@@ -52,14 +52,13 @@ extension URLRequest {
 func fetchDataFromURL(_ url: URL, httpMethod: String? = nil, httpBody: Data? = nil) async throws -> Data {
     var request = URLRequest(url: url)
     request = await request.bless()
-    
+
     let networkState = NetworkUtils.shared
-    
-    
+
     if let httpMethod = httpMethod {
         request.httpMethod = httpMethod
     }
-    
+
     if let httpBody = httpBody {
         request.httpBody = httpBody
     }

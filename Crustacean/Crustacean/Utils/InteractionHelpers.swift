@@ -40,7 +40,7 @@ enum CommentFlagReasons: String, CaseIterable, Identifiable, FlagReason {
     case spam = "Spam"
 
     var flagValue: Character {
-        return Array(self.rawValue)[0]
+        return Array(rawValue)[0]
     }
 }
 
@@ -56,7 +56,7 @@ enum StoryFlagReasons: String, CaseIterable, Identifiable, FlagReason {
     case spam = "Spam"
 
     var flagValue: Character {
-        return Array(self.rawValue)[0]
+        return Array(rawValue)[0]
     }
 }
 
@@ -69,7 +69,7 @@ func flagItem<T: FlagReason>(shortId: String, entity: EntityType, reason: T) asy
     do {
         let formData = MultipartFormDataRequest(url: url)
         formData.addTextField(named: "reason", value: reason.flagValue.description)
-            
+
         let request = await formData.asURLRequest().bless()
         let (response, _) = try await URLSession.shared.data(for: request)
         let responseString = String(data: response, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "UNKNOWN"
@@ -92,15 +92,13 @@ func castVote(shortId: String, entity: EntityType, action: ActionType) async -> 
     let url = BASE_URL.appending(path: "/\(entity)/\(shortId)/\(action)")
     var voteResponse: VoteResponse?
 
-    @AppStorage("isLoggedIn") var isLoggedIn = false
-
     do {
         let response = try await fetchDataFromURL(url, httpMethod: "POST")
         let responseString = String(data: response, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "UNKNOWN"
 
         // Logged out, update state to allow logging back in.
         if responseString == "not logged in" {
-            isLoggedIn = false
+            nukeCookies()
         }
 
         voteResponse = responseString == "ok" ? .success : .error(responseString)

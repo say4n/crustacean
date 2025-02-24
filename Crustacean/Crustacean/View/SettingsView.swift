@@ -15,6 +15,11 @@ enum Appearance: String, CaseIterable {
     case dark = "Dark"
 }
 
+func nukeCookies() {
+    HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+    logger.info("Cookie storage cleared")
+}
+
 struct SettingsView: View {
     @AppStorage("appAppearance") private var appAppearance: Appearance = .automatic
     @AppStorage("defaultTab") private var defaultTab: TabType = .hottest
@@ -42,15 +47,7 @@ struct SettingsView: View {
                     }
                 } else {
                     Button(role: .destructive) {
-                        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
-                        logger.info("Cookie storage cleared")
-
-                        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
-                            for record in records {
-                                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
-                                logger.info("Cookie \(record) deleted")
-                            }
-                        }
+                        nukeCookies()
 
                         isLoggedIn = false
                     } label: {

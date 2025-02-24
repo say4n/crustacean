@@ -17,6 +17,7 @@ struct DataTabView: View {
 
     @State private var taskId: UUID = .init()
     @State private var showFlagAlert = false
+    @State private var selectedPostShortId: String? = nil
 
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "DataTabView")
 
@@ -41,8 +42,6 @@ struct DataTabView: View {
 
                 List {
                     ForEach(items.indices, id: \.self) { index in
-                        let post: Post = items[index]
-                        
                         PostItemView(data: items[index])
                             .onAppear {
                                 Task {
@@ -51,6 +50,8 @@ struct DataTabView: View {
                             }
                             .if(isLoggedIn) { view in
                                 view.swipeActions(edge: .trailing) {
+                                    let post: Post = items[index]
+
                                     Button {
                                         logger.info("Upvote")
                                         Task {
@@ -89,6 +90,7 @@ struct DataTabView: View {
                                         logger.info("Flag")
                                         Task {
                                             logger.info("Flag")
+                                            selectedPostShortId = post.shortId
                                             showFlagAlert = true
                                         }
                                     } label: {
@@ -96,22 +98,29 @@ struct DataTabView: View {
                                     }
                                     .tint(.gray)
                                 }
-                                .alert("Flag", isPresented: $showFlagAlert) {
-                                    ForEach(StoryFlagReasons.allCases) { reason in
-                                        Button(reason.rawValue) {
-                                            Task {
-                                                await flagItem(shortId: post.shortId, entity: .stories, reason: reason)
-                                            }
-                                        }
-                                    }
-                                    Button("Cancel", role: .cancel) {
-                                        await castVote(shortId: post.shortId, entity: .stories, action: .unvote)
-                                    }
-                                }
                             }
                     }
                 }
                 .listStyle(.plain)
+                .alert("Flag", isPresented: $showFlagAlert) {
+                    ForEach(StoryFlagReasons.allCases) { reason in
+                        Button(reason.rawValue) {
+                            Task {
+                                if selectedPostShortId != nil {
+                                    let _ = await flagItem(shortId: selectedPostShortId!, entity: .stories, reason: reason)
+                                }
+                            }
+                        }
+                    }
+
+                    Button("Cancel", role: .cancel) {
+                        Task {
+                            if selectedPostShortId != nil {
+                                let _ = await castVote(shortId: selectedPostShortId!, entity: .stories, action: .unvote)
+                            }
+                        }
+                    }
+                }
             }
             .refreshable {
                 taskId = .init()
