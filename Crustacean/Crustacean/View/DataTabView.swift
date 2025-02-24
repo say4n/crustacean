@@ -41,6 +41,8 @@ struct DataTabView: View {
 
                 List {
                     ForEach(items.indices, id: \.self) { index in
+                        let post: Post = items[index]
+                        
                         PostItemView(data: items[index])
                             .onAppear {
                                 Task {
@@ -49,8 +51,6 @@ struct DataTabView: View {
                             }
                             .if(isLoggedIn) { view in
                                 view.swipeActions(edge: .trailing) {
-                                    let post: Post = items[index]
-
                                     Button {
                                         logger.info("Upvote")
                                         Task {
@@ -98,9 +98,15 @@ struct DataTabView: View {
                                 }
                                 .alert("Flag", isPresented: $showFlagAlert) {
                                     ForEach(StoryFlagReasons.allCases) { reason in
-                                        Button(reason.rawValue) {}
+                                        Button(reason.rawValue) {
+                                            Task {
+                                                await flagItem(shortId: post.shortId, entity: .stories, reason: reason)
+                                            }
+                                        }
                                     }
-                                    Button("Cancel", role: .cancel) {}
+                                    Button("Cancel", role: .cancel) {
+                                        await castVote(shortId: post.shortId, entity: .stories, action: .unvote)
+                                    }
                                 }
                             }
                     }

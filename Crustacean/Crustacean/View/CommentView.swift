@@ -159,9 +159,17 @@ struct CommentView: View {
                     }
                     .alert("Flag", isPresented: $showFlagAlert) {
                         ForEach(CommentFlagReasons.allCases) { reason in
-                            Button(reason.rawValue) {}
+                            Button(reason.rawValue) {
+                                Task {
+                                    await flagItem(shortId: commentHierarchy.shortId, entity: .comments, reason: reason)
+                                }
+                            }
                         }
-                        Button("Cancel", role: .cancel) {}
+                        Button("Cancel", role: .cancel) {
+                            Task {
+                                await castVote(shortId: commentHierarchy.shortId, entity: .comments, action: .unvote)
+                            }
+                        }
                     }
                 }
             }

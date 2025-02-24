@@ -22,8 +22,13 @@ enum VoteResponse: Equatable {
     case error(String)
 }
 
+protocol FlagReason {
+    var rawValue: String { get }
+    var flagValue: Character { get }
+}
+
 /// See: https://github.com/lobsters/lobsters/blob/55bfc00be02f6df5f008b69f6cec26a3219a1dd0/app/models/vote.rb#L26-L32
-enum CommentFlagReasons: String, CaseIterable, Identifiable {
+enum CommentFlagReasons: String, CaseIterable, Identifiable, FlagReason {
     var id: Self {
         return self
     }
@@ -34,24 +39,13 @@ enum CommentFlagReasons: String, CaseIterable, Identifiable {
     case unkind = "Unkind"
     case spam = "Spam"
 
-    var intValue: Int {
-        switch self {
-        case .offTopic:
-            return 0
-        case .meToo:
-            return 1
-        case .troll:
-            return 2
-        case .unkind:
-            return 3
-        case .spam:
-            return 4
-        }
+    var flagValue: Character {
+        return Array(self.rawValue)[0]
     }
 }
 
 /// See: https://github.com/lobsters/lobsters/blob/55bfc00be02f6df5f008b69f6cec26a3219a1dd0/app/models/vote.rb#L39-L44
-enum StoryFlagReasons: String, CaseIterable, Identifiable {
+enum StoryFlagReasons: String, CaseIterable, Identifiable, FlagReason {
     var id: Self {
         return self
     }
@@ -61,18 +55,37 @@ enum StoryFlagReasons: String, CaseIterable, Identifiable {
     case brokenLink = "Broken Link"
     case spam = "Spam"
 
-    var intValue: Int {
-        switch self {
-        case .offTopic:
-            return 0
-        case .alreadyPosted:
-            return 1
-        case .brokenLink:
-            return 2
-        case .spam:
-            return 3
-        }
+    var flagValue: Character {
+        return Array(self.rawValue)[0]
     }
+}
+
+func flagItem<T: FlagReason>(shortId: String, entity: EntityType, reason: T) async -> VoteResponse? {
+    let url = BASE_URL.appending(path: "/\(entity)/\(shortId)/flag")
+    var voteResponse: VoteResponse?
+
+    @AppStorage("isLoggedIn") var isLoggedIn = false
+
+    do {
+        let formData = MultipartFormDataRequest(url: url)
+        formData.addTextField(named: "reason", value: reason.flagValue.description)
+            
+        let request = await formData.asURLRequest().bless()
+        let (response, _) = try await URLSession.shared.data(for: request)
+        let responseString = String(data: response, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "UNKNOWN"
+
+        // Logged out, update state to allow logging back in.
+        if responseString == "not logged in" {
+            isLoggedIn = false
+        }
+
+        voteResponse = responseString == "ok" ? .success : .error(responseString)
+        logger.info("Response from flagging with \(reason.rawValue): \(responseString)")
+    } catch {
+        logger.error("Could not flag with \(reason.rawValue) story: \(error)")
+    }
+
+    return voteResponse
 }
 
 func castVote(shortId: String, entity: EntityType, action: ActionType) async -> VoteResponse? {
