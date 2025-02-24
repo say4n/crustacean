@@ -49,6 +49,13 @@ struct SettingsView: View {
                     Button(role: .destructive) {
                         nukeCookies()
 
+                        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+                            for record in records {
+                                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+                                logger.info("Cookie \(record) deleted")
+                            }
+                        }
+
                         isLoggedIn = false
                     } label: {
                         Label("Logout", systemImage: "person.crop.circle")
