@@ -42,13 +42,7 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section {
-                if !isLoggedIn || !demoMode {
-                    Button {
-                        showLoginView = true
-                    } label: {
-                        Label("Login to Lobste.rs", systemImage: "person.crop.circle")
-                    }
-                } else {
+                if demoMode || isLoggedIn {
                     Button(role: .destructive) {
                         nukeCookies()
 
@@ -64,6 +58,12 @@ struct SettingsView: View {
                     } label: {
                         Label(demoMode ? "Logout (Demo Mode)" : "Logout", systemImage: "person.crop.circle")
                             .foregroundStyle(.red)
+                    }
+                } else {
+                    Button {
+                        showLoginView = true
+                    } label: {
+                        Label("Login to Lobste.rs", systemImage: "person.crop.circle")
                     }
                 }
             } header: {
