@@ -5,6 +5,7 @@
 //  Created by Sayan Goswami on 20/02/2025.
 //
 
+import AlertToast
 import OSLog
 import SwiftUI
 import WebKit
@@ -23,7 +24,8 @@ func nukeCookies() {
 struct SettingsView: View {
     @AppStorage("appAppearance") private var appAppearance: Appearance = .automatic
     @AppStorage("defaultTab") private var defaultTab: TabType = .hottest
-    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
+    @AppStorage("isLoggedIn") private var isLoggedIn = false
+    @AppStorage("demoMode") private var demoMode = false
 
     @Environment(\.openURL) private var openURL
 
@@ -31,6 +33,7 @@ struct SettingsView: View {
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "SettingsView")
 
     @State private var showLoginView = false
+    @State private var showDemoModeAlert = false
 
     private func getLoginState() -> Bool {
         return HTTPCookieStorage.shared.cookies?.filter { $0.name == "lobster_trap" }.count ?? 0 > 0
@@ -39,7 +42,7 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section {
-                if !isLoggedIn {
+                if !isLoggedIn || !demoMode {
                     Button {
                         showLoginView = true
                     } label: {
@@ -58,7 +61,7 @@ struct SettingsView: View {
 
                         isLoggedIn = false
                     } label: {
-                        Label("Logout", systemImage: "person.crop.circle")
+                        Label(demoMode ? "Logout (Demo Mode)" : "Logout", systemImage: "person.crop.circle")
                             .foregroundStyle(.red)
                     }
                 }
@@ -105,12 +108,19 @@ struct SettingsView: View {
 
                 NavigationLink {
                     VStack {
+                        Spacer()
+
                         Image("Icon")
                             .resizable()
                             .clipShape(
                                 RoundedRectangle(cornerRadius: 4)
                             )
                             .frame(width: 128, height: 128)
+                            .simultaneousGesture(TapGesture(count: 5).onEnded {
+                                demoMode.toggle()
+                                showDemoModeAlert = true
+                            })
+                            .sensoryFeedback(.success, trigger: demoMode)
 
                         HStack(spacing: 4) {
                             Text("Crustacean")
@@ -118,6 +128,15 @@ struct SettingsView: View {
                         }
                         .font(.callout)
                         .foregroundStyle(.secondary)
+
+                        Spacer()
+                    }
+                    .toast(isPresenting: $showDemoModeAlert) {
+                        AlertToast(
+                            displayMode: .banner(.slide),
+                            type: demoMode ? .complete(.green) : .regular,
+                            title: "Demo mode \(demoMode ? "enabled" : "disabled")"
+                        )
                     }
                 } label: {
                     Label("About", systemImage: "info.circle")

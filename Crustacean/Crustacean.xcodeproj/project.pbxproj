@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A234D5942D6DB7850012D71C /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = A234D5932D6DB7850012D71C /* AlertToast */; };
 		A2598E302D662A7500309B09 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = A2598E2F2D662A7500309B09 /* Flow */; };
 		A2598E332D662A8100309B09 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = A2598E322D662A8100309B09 /* MarkdownUI */; };
 /* End PBXBuildFile section */
@@ -28,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A234D5942D6DB7850012D71C /* AlertToast in Frameworks */,
 				A2598E332D662A8100309B09 /* MarkdownUI in Frameworks */,
 				A2598E302D662A7500309B09 /* Flow in Frameworks */,
 			);
@@ -83,6 +85,7 @@
 			packageProductDependencies = (
 				A2598E2F2D662A7500309B09 /* Flow */,
 				A2598E322D662A8100309B09 /* MarkdownUI */,
+				A234D5932D6DB7850012D71C /* AlertToast */,
 			);
 			productName = Crustacean;
 			productReference = A29CF4B22D62B68C003D8C9D /* Crustacean.app */;
@@ -115,6 +118,7 @@
 			packageReferences = (
 				A2598E2E2D662A7500309B09 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
 				A2598E312D662A8100309B09 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+				A234D5922D6DB7850012D71C /* XCRemoteSwiftPackageReference "AlertToast" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A29CF4B32D62B68C003D8C9D /* Products */;
@@ -383,6 +387,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A234D5922D6DB7850012D71C /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elai950/AlertToast";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.9;
+			};
+		};
 		A2598E2E2D662A7500309B09 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/tevelee/SwiftUI-Flow";
@@ -402,6 +414,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A234D5932D6DB7850012D71C /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A234D5922D6DB7850012D71C /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
+		};
 		A2598E2F2D662A7500309B09 /* Flow */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A2598E2E2D662A7500309B09 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;

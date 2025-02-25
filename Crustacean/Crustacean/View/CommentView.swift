@@ -22,6 +22,7 @@ struct CommentView: View {
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "CommentView")
 
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
+    @AppStorage("demoMode") private var demoMode = false
 
     @State private var localScore = 0
     @State private var isUpvoted: Bool? = nil
@@ -111,7 +112,7 @@ struct CommentView: View {
                     Text(localScore.description)
                 }
 
-                if isLoggedIn {
+                if isLoggedIn || demoMode {
                     Circle()
                         .frame(width: 4, height: 4)
                         .foregroundColor(Color.primary.opacity(0.4))

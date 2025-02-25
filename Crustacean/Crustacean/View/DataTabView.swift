@@ -12,6 +12,8 @@ struct DataTabView: View {
     let tabType: TabType
 
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
+    @AppStorage("demoMode") private var demoMode = false
+    
     @ObservedObject var dataSource = TabDataSource.shared
     @ObservedObject var networkState = NetworkUtils.shared
 
@@ -48,7 +50,7 @@ struct DataTabView: View {
                                     await dataSource.fetchData(for: tabType, cursor: index)
                                 }
                             }
-                            .if(isLoggedIn) { view in
+                            .if(isLoggedIn || demoMode) { view in
                                 view.swipeActions(edge: .trailing) {
                                     let post: Post = items[index]
 
