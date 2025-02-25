@@ -7,6 +7,7 @@
 
 import AlertToast
 import OSLog
+import SwiftData
 import SwiftUI
 import WebKit
 
@@ -28,12 +29,17 @@ struct SettingsView: View {
     @AppStorage("demoMode") private var demoMode = false
 
     @Environment(\.openURL) private var openURL
+    @Environment(\.modelContext) private var context
 
     private let tabOptions = TabType.allCases.filter { $0 != .settings }
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "SettingsView")
 
     @State private var showLoginView = false
     @State private var showDemoModeAlert = false
+
+    @Query private var filteredUsers: [FilteredPerson]
+    @Query private var filteredPosts: [FilteredPostItem]
+    @Query private var filteredComments: [FilteredCommentItem]
 
     private func getLoginState() -> Bool {
         return HTTPCookieStorage.shared.cookies?.filter { $0.name == "lobster_trap" }.count ?? 0 > 0
@@ -144,6 +150,52 @@ struct SettingsView: View {
                 }
             } header: {
                 Text("Information")
+            }
+
+            Section {
+                Button {
+                    do {
+                        try context.transaction {
+                            try context.delete(model: FilteredPostItem.self)
+                            try context.save()
+                        }
+                        logger.info("Cleared filtered posts")
+                    } catch {
+                        logger.error("Could not delete filtered posts: \(error)")
+                    }
+                } label: {
+                    Label("Reset Hidden Posts", systemImage: "text.page.slash")
+                }.disabled(filteredPosts.count == 0)
+
+                Button {
+                    do {
+                        try context.transaction {
+                            try context.delete(model: FilteredCommentItem.self)
+                            try context.save()
+                        }
+                        logger.info("Cleared filtered comments")
+                    } catch {
+                        logger.error("Could not delete filtered comments: \(error)")
+                    }
+                } label: {
+                    Label("Reset Hidden Comments", systemImage: "text.page.slash")
+                }.disabled(filteredComments.count == 0)
+
+                Button {
+                    do {
+                        try context.transaction {
+                            try context.delete(model: FilteredPerson.self)
+                            try context.save()
+                        }
+                        logger.info("Cleared filtered persons")
+                    } catch {
+                        logger.error("Could not delete filtered persons: \(error)")
+                    }
+                } label: {
+                    Label("Reset Hidden Users", systemImage: "person.slash")
+                }.disabled(filteredUsers.count == 0)
+            } header: {
+                Text("Miscellaneous")
             }
         }
         .sheet(isPresented: $showLoginView) {

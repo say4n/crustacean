@@ -11,6 +11,8 @@ import SwiftUI
 struct DataTabView: View {
     let tabType: TabType
 
+    @Environment(\.modelContext) private var context
+
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     @AppStorage("demoMode") private var demoMode = false
 
@@ -18,8 +20,12 @@ struct DataTabView: View {
     @ObservedObject var networkState = NetworkUtils.shared
 
     @State private var taskId: UUID = .init()
+
     @State private var showFlagAlert = false
+    @State private var showHideAlert = false
+
     @State private var selectedPostShortId: String? = nil
+    @State private var selectedUsername: String? = nil
 
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "DataTabView")
 
@@ -89,7 +95,6 @@ struct DataTabView: View {
                                     .tint(.red)
 
                                     Button {
-                                        logger.info("Flag")
                                         Task {
                                             logger.info("Flag")
                                             selectedPostShortId = post.shortId
@@ -99,6 +104,18 @@ struct DataTabView: View {
                                         Label("Flag", systemImage: "ellipsis.circle")
                                     }
                                     .tint(.gray)
+                                }
+                                .swipeActions(edge: .leading) {
+                                    let post: Post = items[index]
+
+                                    Button {
+                                        logger.info("Hide")
+                                        selectedPostShortId = post.shortId
+                                        selectedUsername = post.submitterUser
+                                        showHideAlert = true
+                                    } label: {
+                                        Label("Hide", systemImage: "eye.slash")
+                                    }
                                 }
                             }
                     }
@@ -122,6 +139,21 @@ struct DataTabView: View {
                             }
                         }
                     }
+                }
+                .alert("Hide", isPresented: $showHideAlert) {
+                    Button("Story") {
+                        if selectedPostShortId != nil {
+                            logger.info("Hiding story: \(selectedPostShortId!)")
+                            context.insert(FilteredPostItem(shortId: selectedPostShortId!))
+                        }
+                    }
+                    Button("User") {
+                        if selectedUsername != nil {
+                            logger.info("Hiding user: \(selectedUsername!)")
+                            context.insert(FilteredPerson(username: selectedUsername!))
+                        }
+                    }
+                    Button("Cancel", role: .cancel) {}
                 }
             }
             .refreshable {

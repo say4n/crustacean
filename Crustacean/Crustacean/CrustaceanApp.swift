@@ -5,6 +5,7 @@
 //  Created by Sayan Goswami on 17/02/2025.
 //
 
+import SwiftData
 import SwiftUI
 
 @main
@@ -25,6 +26,7 @@ struct CrustaceanApp: App {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(colorScheme())
+                .modelContainer(for: [FilteredPostItem.self, FilteredCommentItem.self, FilteredPerson.self], inMemory: false, isAutosaveEnabled: true)
         }
     }
 }

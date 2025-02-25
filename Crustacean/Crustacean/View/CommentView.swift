@@ -11,6 +11,8 @@ import SwiftUI
 struct CommentView: View {
     let commentHierarchy: Comment
 
+    @Environment(\.modelContext) private var context
+
     private let hierarchyColors: [Color] = [
         .cyan,
         .yellow,
@@ -26,8 +28,10 @@ struct CommentView: View {
 
     @State private var localScore = 0
     @State private var isUpvoted: Bool? = nil
-    @State private var expandComments: Bool = true
-    @State private var showFlagAlert: Bool = false
+    @State private var expandComments = true
+
+    @State private var showFlagAlert = false
+    @State private var showHideAlert = false
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -155,6 +159,12 @@ struct CommentView: View {
                             Label("Flag", systemImage: "ellipsis")
                         }
 
+                        Button {
+                            logger.info("Hide")
+                            showHideAlert = true
+                        } label: {
+                            Label("Hide", systemImage: "eye.slash")
+                        }
                     } label: {
                         Image(systemName: "ellipsis.circle")
                     }
@@ -171,6 +181,17 @@ struct CommentView: View {
                                 await castVote(shortId: commentHierarchy.shortId, entity: .comments, action: .unvote)
                             }
                         }
+                    }
+                    .alert("Hide", isPresented: $showHideAlert) {
+                        Button("Comment") {
+                            logger.info("Hiding comment: \(commentHierarchy.shortId)")
+                            context.insert(FilteredCommentItem(shortId: commentHierarchy.shortId))
+                        }
+                        Button("User") {
+                            logger.info("Hiding user: \(commentHierarchy.commentingUser)")
+                            context.insert(FilteredPerson(username: commentHierarchy.commentingUser))
+                        }
+                        Button("Cancel", role: .cancel) {}
                     }
                 }
             }
