@@ -13,7 +13,7 @@ struct DataTabView: View {
 
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     @AppStorage("demoMode") private var demoMode = false
-    
+
     @ObservedObject var dataSource = TabDataSource.shared
     @ObservedObject var networkState = NetworkUtils.shared
 

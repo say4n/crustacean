@@ -60,6 +60,7 @@ struct SettingsView: View {
                         }
 
                         isLoggedIn = false
+                        demoMode = false
                     } label: {
                         Label(demoMode ? "Logout (Demo Mode)" : "Logout", systemImage: "person.crop.circle")
                             .foregroundStyle(.red)
