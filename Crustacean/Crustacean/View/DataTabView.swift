@@ -6,12 +6,16 @@
 //
 
 import OSLog
+import SwiftData
 import SwiftUI
 
 struct DataTabView: View {
     let tabType: TabType
 
     @Environment(\.modelContext) private var context
+
+    @Query private var filteredUsers: [FilteredPerson]
+    @Query private var filteredPosts: [FilteredPostItem]
 
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     @AppStorage("demoMode") private var demoMode = false
@@ -26,6 +30,8 @@ struct DataTabView: View {
 
     @State private var selectedPostShortId: String? = nil
     @State private var selectedUsername: String? = nil
+
+    @State private var isHiddenEntity = [String]()
 
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "DataTabView")
 
@@ -49,7 +55,9 @@ struct DataTabView: View {
                 }
 
                 List {
-                    ForEach(items.indices, id: \.self) { index in
+                    ForEach(items.indices.filter {
+                        !(isHiddenEntity.contains(items[$0].shortId) || isHiddenEntity.contains(items[$0].submitterUser))
+                    }, id: \.self) { index in
                         PostItemView(data: items[index])
                             .onAppear {
                                 Task {
@@ -145,12 +153,18 @@ struct DataTabView: View {
                         if selectedPostShortId != nil {
                             logger.info("Hiding story: \(selectedPostShortId!)")
                             context.insert(FilteredPostItem(shortId: selectedPostShortId!))
+                            withAnimation {
+                                isHiddenEntity.append(selectedPostShortId!)
+                            }
                         }
                     }
                     Button("User") {
                         if selectedUsername != nil {
                             logger.info("Hiding user: \(selectedUsername!)")
                             context.insert(FilteredPerson(username: selectedUsername!))
+                            withAnimation {
+                                isHiddenEntity.append(selectedUsername!)
+                            }
                         }
                     }
                     Button("Cancel", role: .cancel) {}
@@ -159,8 +173,12 @@ struct DataTabView: View {
             .refreshable {
                 taskId = .init()
             }
+
         }.task(id: taskId) {
             await dataSource.fetchData(for: tabType, force: true)
+        }
+        .onAppear {
+            isHiddenEntity = filteredUsers.map { $0.username } + filteredPosts.map { $0.shortId }
         }
     }
 }

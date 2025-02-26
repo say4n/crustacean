@@ -6,12 +6,16 @@
 //
 
 import OSLog
+import SwiftData
 import SwiftUI
 
 struct CommentView: View {
     let commentHierarchy: Comment
 
     @Environment(\.modelContext) private var context
+
+    @Query private var filteredUsers: [FilteredPerson]
+    @Query private var filteredComments: [FilteredCommentItem]
 
     private let hierarchyColors: [Color] = [
         .cyan,
@@ -63,7 +67,12 @@ struct CommentView: View {
             }
 
             Group {
-                MarkdownView(text: commentHierarchy.commentPlain, score: commentHierarchy.score)
+                if commentHierarchy.isHidden {
+                    Text("Comment hidden by you.")
+                        .foregroundStyle(.secondary)
+                } else {
+                    MarkdownView(text: commentHierarchy.commentPlain, score: commentHierarchy.score)
+                }
 
                 VStack(spacing: 0) {
                     ForEach(commentHierarchy.children, id: \.shortId) { child in
@@ -186,10 +195,16 @@ struct CommentView: View {
                         Button("Comment") {
                             logger.info("Hiding comment: \(commentHierarchy.shortId)")
                             context.insert(FilteredCommentItem(shortId: commentHierarchy.shortId))
+                            withAnimation {
+                                commentHierarchy.isHidden = true
+                            }
                         }
                         Button("User") {
                             logger.info("Hiding user: \(commentHierarchy.commentingUser)")
                             context.insert(FilteredPerson(username: commentHierarchy.commentingUser))
+                            withAnimation {
+                                commentHierarchy.isHidden = true
+                            }
                         }
                         Button("Cancel", role: .cancel) {}
                     }
@@ -202,6 +217,9 @@ struct CommentView: View {
                 .contentTransition(.symbolEffect(.replace))
         }
         .padding(4)
+        .onAppear {
+            commentHierarchy.isHidden = filteredUsers.map { $0.username }.contains(commentHierarchy.commentingUser) || filteredComments.map { $0.shortId }.contains(commentHierarchy.shortId)
+        }
     }
 }
 

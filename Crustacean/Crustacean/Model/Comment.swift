@@ -28,6 +28,7 @@ class Comment: Decodable {
     let url: String
 
     var children: [Comment] = []
+    var isHidden: Bool = false
 
     init(comment: String, commentPlain: String, commentingUser: String, createdAt: String, depth: Int, flags: Int, isDeleted: Bool, isModerated: Bool, lastEditedAt: String, parentComment: String?, score: Int, shortId: String, shortIdUrl: String, url: String, children: [Comment]) {
         self.comment = comment

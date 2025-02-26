@@ -7,6 +7,7 @@
 
 import Foundation
 import OSLog
+import SwiftData
 
 @MainActor final class TabDataSource: @preconcurrency DataSource, ObservableObject {
     static var shared: TabDataSource = .init()
@@ -21,6 +22,29 @@ import OSLog
         TabType.active: .unknown,
         TabType.newest: .unknown,
     ]
+
+    private let container = try? ModelContainer(for: FilteredPostItem.self, FilteredCommentItem.self, FilteredPerson.self)
+    private var context: ModelContext? {
+        container?.mainContext
+    }
+
+    private let hiddenUsersFetchDescriptor = FetchDescriptor<FilteredPerson>()
+    private let hiddenStoriesFetchDescriptor = FetchDescriptor<FilteredPostItem>()
+    private var hiddenUsers: [String] {
+        do {
+            return try context?.fetch(hiddenUsersFetchDescriptor).map { $0.username } ?? []
+        } catch {
+            return []
+        }
+    }
+
+    private var hiddenPosts: [String] {
+        do {
+            return try context?.fetch(hiddenStoriesFetchDescriptor).map { $0.shortId } ?? []
+        } catch {
+            return []
+        }
+    }
 
     private var pageByTab: [TabType: Int] = [
         TabType.hottest: 1,
@@ -65,10 +89,13 @@ import OSLog
                 fetchedItems = try await fetchHotPosts(for: tabType, pageIndex: pageByTab[tabType] ?? 1)
             }
 
+            fetchedItems = filterHiddenEntities(postsToFilter: fetchedItems)
+
             let _page = pageByTab[tabType] ?? -1
             logger.info("Fetched \(fetchedItems.count) \(tabType.rawValue) posts in page \(_page)")
 
             DispatchQueue.main.async {
+                self.items[tabType] = self.filterHiddenEntities(postsToFilter: self.items[tabType] ?? [])
                 let existingPostIds = self.items[tabType]?.map { $0.shortId }
                 let filteredItems: [Post] = fetchedItems.filter { existingPostIds?.contains($0.shortId) != true }
 
@@ -80,7 +107,7 @@ import OSLog
                     self.items[tabType] = fetchedItems
                 }
 
-                self.pageByTab[tabType] = (self.pageByTab[tabType] ?? 1) + 1
+                self.pageByTab[tabType] = (self.pageByTab[tabType] ?? 1) + (force ? 0 : 1)
             }
         } catch {
             logger.error("Failed to fetch \(tabType.rawValue) posts")
@@ -91,6 +118,26 @@ import OSLog
 
         DispatchQueue.main.async {
             self.objectWillChange.send()
+        }
+    }
+
+    private func filterHiddenEntities(postsToFilter: [Post]) -> [Post] {
+        return postsToFilter.filter {
+            let filterClause = !hiddenPosts.contains($0.shortId)
+
+            if !filterClause {
+                logger.warning("\($0.shortId) filtered out")
+            }
+
+            return filterClause
+        }.filter {
+            let filterClause = !hiddenUsers.contains($0.submitterUser)
+
+            if !filterClause {
+                logger.warning("\($0.submitterUser) filtered out")
+            }
+
+            return filterClause
         }
     }
 

@@ -7,6 +7,7 @@
 
 import Foundation
 import OSLog
+import SwiftData
 import SwiftUI
 
 @MainActor class CommentDataSource: ObservableObject {
@@ -16,6 +17,29 @@ import SwiftUI
     @Published var state = DataSourceState.unknown
 
     private var logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "CommentDataSource")
+
+    private let container = try? ModelContainer(for: FilteredPostItem.self, FilteredCommentItem.self, FilteredPerson.self)
+    private var context: ModelContext? {
+        container?.mainContext
+    }
+
+    private let hiddenUsersFetchDescriptor = FetchDescriptor<FilteredPerson>()
+    private let hiddenCommentsFetchDescriptor = FetchDescriptor<FilteredCommentItem>()
+    private var hiddenUsers: [String] {
+        do {
+            return try context?.fetch(hiddenUsersFetchDescriptor).map { $0.username } ?? []
+        } catch {
+            return []
+        }
+    }
+
+    private var hiddenComments: [String] {
+        do {
+            return try context?.fetch(hiddenCommentsFetchDescriptor).map { $0.shortId } ?? []
+        } catch {
+            return []
+        }
+    }
 
     func fetchComments(shortId: String) async throws {
         DispatchQueue.main.async {
@@ -71,12 +95,19 @@ import SwiftUI
         for comment in fetchedComments! {
             let child = treeMap[comment.shortId]!
 
+            if hiddenComments.contains(comment.shortId) || hiddenUsers.contains(comment.commentingUser) {
+                child.isHidden = true
+            }
+
             if comment.parentComment != nil {
                 logger.info("\(comment.parentComment!) -> \(child.shortId)")
 
                 let newValue = treeMap[comment.parentComment!]
                 newValue?.children.append(child)
-                treeMap.updateValue(newValue!, forKey: comment.parentComment!)
+
+                if newValue != nil {
+                    treeMap.updateValue(newValue!, forKey: comment.parentComment!)
+                }
 
                 logger.info("Updated parent has \(treeMap[comment.parentComment!]?.children.count ?? 0) children")
             } else {
