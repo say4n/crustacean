@@ -20,15 +20,22 @@ struct PostItemView: View {
                     Text(data.title)
                         .font(.headline)
 
-                    HFlow {
+                    HFlow(rowSpacing: 4) {
                         ForEach(data.tags, id: \.self) { tag in
                             Text(tag)
                                 .font(.caption)
-                                .fontWeight(.semibold)
+                                .fontWeight(.bold)
                                 .padding(.horizontal, 6)
                                 .colorInvert()
                                 .background(Color.primary.gradient)
                                 .clipShape(Capsule())
+                        }
+
+                        if data.url != "" {
+                            Text(URL(string: data.url)?.host ?? "")
+                                .font(.caption)
+                                .fontWeight(.bold)
+                                .foregroundColor(.secondary)
                         }
                     }.padding(.bottom, 4)
                         .padding(.top, 0.1)

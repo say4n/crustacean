@@ -30,16 +30,22 @@ struct PostDetailView: View {
                     }
                 }.font(.system(size: 20, weight: .bold))
 
-                HFlow {
+                HFlow(rowSpacing: 4) {
                     ForEach(postData.tags, id: \.self) { tag in
                         Text(tag)
                             .font(.caption)
-                            .fontWeight(.semibold)
-                            .bold()
+                            .fontWeight(.bold)
                             .padding(.horizontal, 6)
                             .colorInvert()
                             .background(Color.primary.gradient)
                             .clipShape(Capsule())
+                    }
+
+                    if postData.url != "" {
+                        Text(URL(string: postData.url)?.host ?? "")
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .foregroundColor(.secondary)
                     }
                 }.padding(.bottom, 4)
                     .padding(.top, 0.1)
