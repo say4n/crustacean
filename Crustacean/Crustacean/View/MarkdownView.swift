@@ -27,10 +27,15 @@ struct MarkdownView: View {
                             .frame(width: 4)
                     }
                     .background(Color.secondary.opacity(0.2))
+                    .frame(maxWidth: .infinity)
             }.markdownTextStyle(\.text) {
                 FontSize(.em(1))
                 ForegroundColor(score >= 0 ? Color.primary : Color.primary.opacity(0.4))
             }
+            .markdownTextStyle(\.link) {
+                ForegroundColor(Color.blue)
+            }
+            .padding(.trailing, 4)
     }
 }
 
