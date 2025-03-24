@@ -26,8 +26,8 @@ struct MarkdownView: View {
                             .fill(Color.secondary.opacity(0.3))
                             .frame(width: 4)
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color.secondary.opacity(0.2))
-                    .frame(maxWidth: .infinity)
             }.markdownTextStyle(\.text) {
                 FontSize(.em(1))
                 ForegroundColor(score >= 0 ? Color.primary : Color.primary.opacity(0.4))
