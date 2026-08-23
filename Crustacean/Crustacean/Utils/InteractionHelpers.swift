@@ -70,6 +70,10 @@ func flagItem<T: FlagReason>(shortId: String, entity: EntityType, reason: T) asy
         let formData = MultipartFormDataRequest(url: url)
         formData.addTextField(named: "reason", value: reason.flagValue.description)
 
+        if let csrf = await csrfToken() {
+            formData.addTextField(named: "authenticity_token", value: csrf)
+        }
+
         let request = await formData.asURLRequest().bless()
         let (response, _) = try await URLSession.shared.data(for: request)
         let responseString = String(data: response, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "UNKNOWN"
@@ -93,7 +97,16 @@ func castVote(shortId: String, entity: EntityType, action: ActionType) async -> 
     var voteResponse: VoteResponse?
 
     do {
-        let response = try await fetchDataFromURL(url, httpMethod: "POST")
+        let csrf = await csrfToken()
+        var httpBody: Data?
+        var headers: [String: String] = ["X-Requested-With": "XMLHttpRequest"]
+
+        if let csrf {
+            httpBody = formUrlEncodedBody(["authenticity_token": csrf])
+            headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
+        }
+
+        let response = try await fetchDataFromURL(url, httpMethod: "POST", httpBody: httpBody, headers: headers)
         let responseString = String(data: response, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "UNKNOWN"
 
         // Logged out, update state to allow logging back in.
@@ -108,4 +121,33 @@ func castVote(shortId: String, entity: EntityType, action: ActionType) async -> 
     }
 
     return voteResponse
+}
+
+// The vote endpoints don't report whether the vote actually changed anything
+// (re-upvoting an already-upvoted item is a silent no-op), so after a
+// successful vote the UI reconciles the score with the authoritative value.
+private struct ScorePayload: Decodable {
+    let score: Int
+}
+
+func fetchStoryScore(shortId: String) async -> Int? {
+    let url = BASE_URL.appending(path: "/s/\(shortId).json")
+
+    guard let data = try? await fetchDataFromURL(url),
+          let payload = try? JSONDecoder().decode(ScorePayload.self, from: data) else {
+        return nil
+    }
+
+    return payload.score
+}
+
+func fetchCommentScore(shortId: String) async -> Int? {
+    let url = BASE_URL.appending(path: "/c/\(shortId).json")
+
+    guard let data = try? await fetchDataFromURL(url),
+          let payload = try? JSONDecoder().decode(ScorePayload.self, from: data) else {
+        return nil
+    }
+
+    return payload.score
 }

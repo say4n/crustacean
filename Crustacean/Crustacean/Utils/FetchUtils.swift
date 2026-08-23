@@ -49,7 +49,7 @@ extension URLRequest {
     }
 }
 
-func fetchDataFromURL(_ url: URL, httpMethod: String? = nil, httpBody: Data? = nil) async throws -> Data {
+func fetchDataFromURL(_ url: URL, httpMethod: String? = nil, httpBody: Data? = nil, headers: [String: String]? = nil) async throws -> Data {
     var request = URLRequest(url: url)
     request = await request.bless()
 
@@ -61,6 +61,12 @@ func fetchDataFromURL(_ url: URL, httpMethod: String? = nil, httpBody: Data? = n
 
     if let httpBody = httpBody {
         request.httpBody = httpBody
+    }
+
+    if let headers {
+        for (key, value) in headers {
+            request.setValue(value, forHTTPHeaderField: key)
+        }
     }
 
     if networkState.isNetworkAvailable {

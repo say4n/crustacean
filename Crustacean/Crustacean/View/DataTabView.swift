@@ -140,13 +140,7 @@ struct DataTabView: View {
                         }
                     }
 
-                    Button("Cancel", role: .cancel) {
-                        Task {
-                            if selectedPostShortId != nil {
-                                let _ = await castVote(shortId: selectedPostShortId!, entity: .stories, action: .unvote)
-                            }
-                        }
-                    }
+                    Button("Cancel", role: .cancel) {}
                 }
                 .alert("Hide", isPresented: $showHideAlert) {
                     Button("Story") {

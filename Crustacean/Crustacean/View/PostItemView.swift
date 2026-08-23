@@ -65,10 +65,12 @@ struct PostItemView: View {
 
             Spacer()
 
-            HStack {
-                Image(systemName: "arrow.up")
+            HStack(spacing: 2) {
+                Image(systemName: data.isUpvoted == true ? "arrow.up.circle.fill" : "arrow.up")
                 Text(data.score.description)
             }
+            .fontWeight(data.isUpvoted == true ? .bold : .regular)
+            .foregroundStyle(data.isUpvoted == true ? Color.accentColor : Color.primary)
 
             HStack {
                 Image(systemName: "bubble")

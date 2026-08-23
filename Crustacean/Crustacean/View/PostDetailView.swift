@@ -13,6 +13,23 @@ struct PostDetailView: View {
 
     @ObservedObject var commentsData = CommentDataSource.shared
 
+    @Environment(\.openURL) private var openURL
+
+    @AppStorage("isLoggedIn") private var isLoggedIn = false
+    @AppStorage("demoMode") private var demoMode = false
+
+    @State private var score: Int
+    @State private var isUpvoted: Bool? = nil
+
+    @State private var showComposer = false
+    @State private var composerParentShortId: String?
+    @State private var replyingUsername: String?
+
+    init(postData: Post) {
+        self.postData = postData
+        _score = State(initialValue: postData.score)
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -69,9 +86,11 @@ struct PostDetailView: View {
                         return
                     }
 
-                    try await commentsData.fetchComments(shortId: postData.shortId)
+                    try? await commentsData.fetchComments(shortId: postData.shortId)
                 }
             }
+
+            composerBar
 
             switch commentsData.state {
             case .loading:
@@ -84,8 +103,12 @@ struct PostDetailView: View {
                 let rootNode = commentsData.comments[postData.shortId]
 
                 if rootNode != nil && !rootNode!.children.isEmpty {
-                    CommentView(commentHierarchy: rootNode!)
-                        .transition(.scale)
+                    CommentView(commentHierarchy: rootNode!, onReply: { shortId, username in
+                        composerParentShortId = shortId
+                        replyingUsername = username
+                        showComposer = true
+                    })
+                    .transition(.scale)
                 } else {
                     // No comments.
                     Divider()
@@ -97,7 +120,58 @@ struct PostDetailView: View {
             }
         }.refreshable {
             Task {
-                try await commentsData.fetchComments(shortId: postData.shortId)
+                try? await commentsData.fetchComments(shortId: postData.shortId)
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    if isLoggedIn || demoMode {
+                        if isUpvoted == true {
+                            Button {
+                                Task {
+                                    await vote(.unvote)
+                                }
+                            } label: {
+                                Label("Unvote", image: "Unvote")
+                            }
+                        } else {
+                            Button {
+                                Task {
+                                    await vote(.upvote)
+                                }
+                            } label: {
+                                Label("Upvote", systemImage: "arrowshape.up.fill")
+                            }
+                        }
+
+                        Divider()
+                    }
+
+                    Button {
+                        openURL(URL(string: postData.shortIdUrl)!)
+                    } label: {
+                        Label("Open on Lobste.rs", systemImage: "safari")
+                    }
+
+                    ShareLink(item: URL(string: postData.shortIdUrl)!) {
+                        Label("Share", systemImage: "square.and.arrow.up")
+                    }
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                }
+            }
+        }
+        .sheet(isPresented: $showComposer) {
+            CommentComposerView(
+                storyId: postData.shortId,
+                storyTitle: postData.title,
+                parentCommentShortId: composerParentShortId,
+                replyingToUsername: replyingUsername
+            ) {
+                Task {
+                    try? await commentsData.fetchComments(shortId: postData.shortId)
+                }
             }
         }
     }
@@ -118,15 +192,59 @@ struct PostDetailView: View {
 
             Spacer()
 
-            HStack {
-                Image(systemName: "arrow.up")
-                Text(postData.score.description)
+            HStack(spacing: 2) {
+                Image(systemName: isUpvoted == true ? "arrow.up.circle.fill" : "arrow.up")
+                Text(score.description)
             }
+            .fontWeight(isUpvoted == true ? .bold : .regular)
+            .foregroundStyle(isUpvoted == true ? Color.accentColor : Color.primary)
 
             HStack {
                 Image(systemName: "bubble")
                 Text(postData.commentCount.description)
             }
+        }
+    }
+
+    var composerBar: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Divider()
+
+            if isLoggedIn || demoMode {
+                Button {
+                    composerParentShortId = nil
+                    replyingUsername = nil
+                    showComposer = true
+                } label: {
+                    Label("Add a comment", systemImage: "square.and.pencil")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .padding(.horizontal, 8)
+            } else {
+                Text("Log in from Settings to comment.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 8)
+            }
+        }
+    }
+
+    private func vote(_ action: ActionType) async {
+        guard let voteResponse = await castVote(shortId: postData.shortId, entity: .stories, action: action), voteResponse == .success else { return }
+
+        withAnimation {
+            isUpvoted = (action == .upvote)
+        }
+
+        // Reconcile with the authoritative score; the vote may have been a
+        // no-op if this story was already upvoted (e.g. in another client).
+        if let freshScore = await fetchStoryScore(shortId: postData.shortId) {
+            score = freshScore
+        } else if action == .upvote {
+            score += 1
+        } else {
+            score -= 1
         }
     }
 }
@@ -142,8 +260,8 @@ struct PostDetailView: View {
       "score": 4,
       "flags": 0,
       "comment_count": 3,
-      "description": "<p>What are you doing this week? Feel free to share!</p>\\n<p>Keep in mind it’s OK to do nothing at all, too.</p>\\n",
-      "description_plain": "What are you doing this week? Feel free to share!\\r\\n\\r\\nKeep in mind it’s OK to do nothing at all, too.",
+      "description": "<p>What are you doing this week? Feel free to share!</p>\n<p>Keep in mind it’s OK to do nothing at all, too.</p>\n",
+      "description_plain": "What are you doing this week?\r\n\r\nKeep in mind it’s OK to do nothing at all, too.",
       "comments_url": "https://lobste.rs/s/mlly3p/what_are_you_doing_this_week",
       "submitter_user": "caius",
       "user_is_author": true,

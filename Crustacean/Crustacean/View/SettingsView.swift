@@ -51,6 +51,7 @@ struct SettingsView: View {
                 if demoMode || isLoggedIn {
                     Button(role: .destructive) {
                         nukeCookies()
+                        resetCSRFTokenCache()
 
                         WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
                             for record in records {
@@ -199,19 +200,7 @@ struct SettingsView: View {
             }
         }
         .sheet(isPresented: $showLoginView) {
-            NavigationStack {
-                WebView(url: URL(string: "https://lobste.rs/login")!, showLoginView: $showLoginView)
-                    .ignoresSafeArea(.all)
-                    .navigationTitle("Login with Lobste.rs")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button("Cancel") {
-                                showLoginView = false
-                            }
-                        }
-                    }
-            }
+            LoginSheet(isPresented: $showLoginView)
         }
         .onAppear {
             isLoggedIn = getLoginState()

@@ -58,6 +58,7 @@ struct WebView: UIViewRepresentable {
 
                     parent.isLoggedIn = true
                     parent.showLoginView = false
+                    resetCSRFTokenCache()
                     return
                 }
             }
