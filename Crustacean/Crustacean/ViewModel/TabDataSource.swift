@@ -23,7 +23,7 @@ import SwiftData
         TabType.newest: .unknown,
     ]
 
-    private let container = try? ModelContainer(for: FilteredPostItem.self, FilteredCommentItem.self, FilteredPerson.self)
+    private let container = try? ModelContainer(for: FilteredPostItem.self, FilteredCommentItem.self, FilteredPerson.self, VisitedPost.self)
     private var context: ModelContext? {
         container?.mainContext
     }

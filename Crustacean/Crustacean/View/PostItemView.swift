@@ -18,8 +18,7 @@ struct PostItemView: View {
         } label: {
             VStack(alignment: .leading, spacing: 6) {
                 Text(data.title)
-                    .font(.headline)
-                    .fontWeight(isVisited ? .regular : .semibold)
+                    .font(.system(size: 17, weight: isVisited ? .regular : .semibold))
                     .multilineTextAlignment(.leading)
                     .lineLimit(3)
 

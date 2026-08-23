@@ -18,7 +18,7 @@ import SwiftUI
 
     private var logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "CommentDataSource")
 
-    private let container = try? ModelContainer(for: FilteredPostItem.self, FilteredCommentItem.self, FilteredPerson.self)
+    private let container = try? ModelContainer(for: FilteredPostItem.self, FilteredCommentItem.self, FilteredPerson.self, VisitedPost.self)
     private var context: ModelContext? {
         container?.mainContext
     }
