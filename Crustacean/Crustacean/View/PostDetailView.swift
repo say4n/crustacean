@@ -235,7 +235,10 @@ struct PostDetailView: View {
     }
 
     private func vote(_ action: ActionType) async {
-        guard let voteResponse = await castVote(shortId: postData.shortId, entity: .stories, action: action), voteResponse == .success else { return }
+        guard let voteResponse = await castVote(shortId: postData.shortId, entity: .stories, action: action), voteResponse == .success else {
+            AlertCenter.shared.present("Couldn't update vote. Please try again.")
+            return
+        }
 
         withAnimation {
             isUpvoted = (action == .upvote)

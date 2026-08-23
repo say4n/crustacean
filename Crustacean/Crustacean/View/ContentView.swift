@@ -5,6 +5,7 @@
 //  Created by Sayan Goswami on 17/02/2025.
 //
 
+import AlertToast
 import SwiftUI
 
 enum TabType: String, CaseIterable {
@@ -37,6 +38,7 @@ struct ContentView: View {
     @State private var didRunSessionCheck = false
 
     private let dataSource = TabDataSource.shared
+    @ObservedObject private var alertCenter = AlertCenter.shared
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -78,6 +80,12 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showLoginView) {
             LoginSheet(isPresented: $showLoginView)
+        }
+        .toast(isPresenting: Binding(
+            get: { alertCenter.message != nil },
+            set: { if !$0 { alertCenter.message = nil } }
+        )) {
+            AlertToast(type: .error(.red), title: alertCenter.message ?? "Something went wrong")
         }
     }
 

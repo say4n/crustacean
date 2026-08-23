@@ -94,9 +94,12 @@ struct DataTabView: View {
                                         return
                                     }
 
-                                    if let voteResponse = await castVote(shortId: post.shortId, entity: .stories, action: .upvote), voteResponse == .success {
+                                    let voteResponse = await castVote(shortId: post.shortId, entity: .stories, action: .upvote)
+                                    if voteResponse == .success {
                                         dataSource.items[tabType]?[index].isUpvoted = true
                                         dataSource.items[tabType]?[index].score += 1
+                                    } else {
+                                        AlertCenter.shared.present("Couldn't update vote. Please try again.")
                                     }
                                 }
                             } label: {
@@ -111,9 +114,12 @@ struct DataTabView: View {
                                         return
                                     }
 
-                                    if let voteResponse = await castVote(shortId: post.shortId, entity: .stories, action: .unvote), voteResponse == .success {
+                                    let voteResponse = await castVote(shortId: post.shortId, entity: .stories, action: .unvote)
+                                    if voteResponse == .success {
                                         dataSource.items[tabType]?[index].isUpvoted = false
                                         dataSource.items[tabType]?[index].score -= 1
+                                    } else {
+                                        AlertCenter.shared.present("Couldn't update vote. Please try again.")
                                     }
                                 }
                             } label: {
@@ -153,7 +159,10 @@ struct DataTabView: View {
                 Button(reason.rawValue) {
                     Task {
                         if selectedPostShortId != nil {
-                            let _ = await flagItem(shortId: selectedPostShortId!, entity: .stories, reason: reason)
+                            let result = await flagItem(shortId: selectedPostShortId!, entity: .stories, reason: reason)
+                            if result != .success {
+                                AlertCenter.shared.present("Couldn't flag story. Please try again.")
+                            }
                         }
                     }
                 }

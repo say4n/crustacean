@@ -171,7 +171,10 @@ struct CommentView: View {
                     ForEach(CommentFlagReasons.allCases) { reason in
                         Button(reason.rawValue) {
                             Task {
-                                await flagItem(shortId: commentHierarchy.shortId, entity: .comments, reason: reason)
+                                let result = await flagItem(shortId: commentHierarchy.shortId, entity: .comments, reason: reason)
+                                if result != .success {
+                                    AlertCenter.shared.present("Couldn't flag comment. Please try again.")
+                                }
                             }
                         }
                     }
@@ -215,7 +218,10 @@ struct CommentView: View {
     }
 
     private func vote(_ action: ActionType) async {
-        guard let voteResponse = await castVote(shortId: commentHierarchy.shortId, entity: .comments, action: action), voteResponse == .success else { return }
+        guard let voteResponse = await castVote(shortId: commentHierarchy.shortId, entity: .comments, action: action), voteResponse == .success else {
+            AlertCenter.shared.present("Couldn't update comment vote. Please try again.")
+            return
+        }
 
         withAnimation {
             isUpvoted = (action == .upvote)
