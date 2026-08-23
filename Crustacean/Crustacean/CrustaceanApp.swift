@@ -26,7 +26,7 @@ struct CrustaceanApp: App {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(colorScheme())
-                .modelContainer(for: [FilteredPostItem.self, FilteredCommentItem.self, FilteredPerson.self])
+                .modelContainer(for: [FilteredPostItem.self, FilteredCommentItem.self, FilteredPerson.self, VisitedPost.self])
         }
     }
 }

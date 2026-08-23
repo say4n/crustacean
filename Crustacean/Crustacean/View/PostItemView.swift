@@ -10,6 +10,7 @@ import SwiftUI
 
 struct PostItemView: View {
     let data: Post
+    let isVisited: Bool
 
     private var avatarURL: URL? {
         URL(string: "https://lobste.rs/avatars/\(data.submitterUser)-32.png")
@@ -22,6 +23,7 @@ struct PostItemView: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(data.title)
                     .font(.headline)
+                    .fontWeight(isVisited ? .regular : .semibold)
                     .multilineTextAlignment(.leading)
                     .lineLimit(3)
 

@@ -5,6 +5,7 @@
 //  Created by Sayan Goswami on 25/02/2025.
 //
 
+import Foundation
 import SwiftData
 
 @Model
@@ -31,5 +32,16 @@ class FilteredPerson {
 
     init(username: String) {
         self.username = username
+    }
+}
+
+@Model
+class VisitedPost {
+    @Attribute(.unique) var shortId: String
+    var visitedAt: Date
+
+    init(shortId: String) {
+        self.shortId = shortId
+        self.visitedAt = Date()
     }
 }

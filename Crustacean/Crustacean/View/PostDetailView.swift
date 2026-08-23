@@ -6,6 +6,7 @@
 //
 
 import Flow
+import SwiftData
 import SwiftUI
 
 struct PostDetailView: View {
@@ -14,6 +15,7 @@ struct PostDetailView: View {
     @ObservedObject var commentsData = CommentDataSource.shared
 
     @Environment(\.openURL) private var openURL
+    @Environment(\.modelContext) private var context
 
     @AppStorage("isLoggedIn") private var isLoggedIn = false
     @AppStorage("demoMode") private var demoMode = false
@@ -80,6 +82,8 @@ struct PostDetailView: View {
             .padding(.horizontal, 8)
             .padding(.bottom)
             .onAppear {
+                markAsVisited()
+
                 Task {
                     // Don't fetch comments if we have already fetched.
                     if commentsData.comments.keys.contains(postData.shortId) {
@@ -246,6 +250,18 @@ struct PostDetailView: View {
         } else {
             score -= 1
         }
+    }
+
+    private func markAsVisited() {
+        let shortId = postData.shortId
+
+        var descriptor = FetchDescriptor<VisitedPost>(predicate: #Predicate { $0.shortId == shortId })
+        descriptor.fetchLimit = 1
+
+        guard (try? context.fetchCount(descriptor)) ?? 0 == 0 else { return }
+
+        context.insert(VisitedPost(shortId: shortId))
+        try? context.save()
     }
 }
 

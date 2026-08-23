@@ -16,6 +16,7 @@ struct DataTabView: View {
 
     @Query private var filteredUsers: [FilteredPerson]
     @Query private var filteredPosts: [FilteredPostItem]
+    @Query private var visitedPosts: [VisitedPost]
 
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     @AppStorage("demoMode") private var demoMode = false
@@ -37,6 +38,7 @@ struct DataTabView: View {
 
     var body: some View {
         let items = dataSource.items[tabType] ?? []
+        let visitedShortIds = Set(visitedPosts.map { $0.shortId })
 
         VStack(spacing: 0) {
             if dataSource.state[tabType] == .error && networkState.isNetworkAvailable {
@@ -54,7 +56,7 @@ struct DataTabView: View {
                         .padding(.vertical, 120)
                 }
             } else {
-                storyList(items)
+                storyList(items, visitedShortIds: visitedShortIds)
             }
         }
         .refreshable {
@@ -68,12 +70,12 @@ struct DataTabView: View {
         }
     }
 
-    private func storyList(_ items: [Post]) -> some View {
+    private func storyList(_ items: [Post], visitedShortIds: Set<String>) -> some View {
         List {
             ForEach(items.indices.filter {
                 !(isHiddenEntity.contains(items[$0].shortId) || isHiddenEntity.contains(items[$0].submitterUser))
             }, id: \.self) { index in
-                PostItemView(data: items[index])
+                PostItemView(data: items[index], isVisited: visitedShortIds.contains(items[index].shortId))
                     .listRowSeparator(.visible)
                     .listRowSeparatorTint(Color.secondary.opacity(0.25))
                     .onAppear {
