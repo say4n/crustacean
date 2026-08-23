@@ -1,5 +1,5 @@
 {
-  "originHash" : "9385ee5933c32fb5c1ecb02d54b42982c3337033aa1a655c1d10efc6a8f1e43d",
+  "originHash" : "937feadc7eed2102b84d9b673df6d988dcf54c37b8f738ec9e13e3295e9fa9fb",
   "pins" : [
     {
       "identity" : "alerttoast",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tevelee/SwiftUI-Flow",
       "state" : {
-        "revision" : "5b2f4b3373ff5ba6a8a1666d52ebfd9dc6c0e10b",
-        "version" : "3.0.1"
+        "revision" : "6dc1e0b452432976c27221d28de136fbb6cee56a",
+        "version" : "3.1.0"
       }
     }
   ],

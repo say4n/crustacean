@@ -41,13 +41,15 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             ForEach(tabs, id: \.self) { tab in
-                NavigationView {
+                NavigationStack {
                     if tab.name == .settings {
                         SettingsView()
                             .navigationTitle(tab.name.rawValue)
+                            .navigationBarTitleDisplayMode(.inline)
                     } else {
                         DataTabView(tabType: tab.name)
                             .navigationTitle(tab.name.rawValue)
+                            .navigationBarTitleDisplayMode(.large)
                     }
                 }
                 .tabItem {
