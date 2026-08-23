@@ -85,125 +85,123 @@ struct CommentView: View {
     }
 
     var byline: some View {
-        HStack(spacing: 8) {
-            Button {
-                withAnimation {
-                    expandComments.toggle()
-                }
-            } label: {
-                HStack(spacing: 8) {
-                    let dateString = Date.parseISO(from: commentHierarchy.createdAt)?.timeAgoDisplay() ?? ""
-
-                    Link(commentHierarchy.commentingUser, destination: URL(string: "https://lobste.rs/~\(commentHierarchy.commentingUser)")!)
-
-                    Circle()
-                        .frame(width: 4, height: 4)
-                        .foregroundColor(Color.primary.opacity(0.4))
-
-                    Link(dateString, destination: URL(string: commentHierarchy.shortIdUrl)!)
-                }
-                .contentShape(Rectangle())
+        Button {
+            withAnimation {
+                expandComments.toggle()
             }
-            .buttonStyle(.plain)
+        } label: {
+            HStack(spacing: 8) {
+                let dateString = Date.parseISO(from: commentHierarchy.createdAt)?.timeAgoDisplay() ?? ""
 
-            HStack(spacing: 4) {
-                Image(systemName: isUpvoted == true ? "arrow.up.circle.fill" : "arrow.up")
-                Text(localScore.description)
-            }
-            .fontWeight(isUpvoted == true ? .bold : .regular)
-            .foregroundStyle(isUpvoted == true ? Color.accentColor : Color.primary)
+                Link(commentHierarchy.commentingUser, destination: URL(string: "https://lobste.rs/~\(commentHierarchy.commentingUser)")!)
 
-            if isLoggedIn || demoMode {
-                Menu {
-                    Button {
-                        onReply?(commentHierarchy.shortId, commentHierarchy.commentingUser)
-                    } label: {
-                        Label("Reply", systemImage: "arrowshape.turn.up.left")
-                    }
+                Circle()
+                    .frame(width: 4, height: 4)
+                    .foregroundColor(Color.primary.opacity(0.4))
 
-                    if isUpvoted == true {
-                        Button {
-                            Task {
-                                await vote(.unvote)
-                            }
-                        } label: {
-                            Label("Unvote", image: "Unvote")
-                        }
-                    } else {
-                        Button {
-                            Task {
-                                await vote(.upvote)
-                            }
-                        } label: {
-                            Label("Upvote", systemImage: "arrowshape.up.fill")
-                        }
-                    }
+                Link(dateString, destination: URL(string: commentHierarchy.shortIdUrl)!)
 
-                    Button {
-                        logger.info("Flag")
-                        showFlagAlert = true
-                    } label: {
-                        Label("Flag", systemImage: "ellipsis")
-                    }
-
-                    Button {
-                        logger.info("Hide")
-                        showHideAlert = true
-                    } label: {
-                        Label("Hide", systemImage: "eye.slash")
-                    }
-
-                    Divider()
-
-                    Button {
-                        openURL(URL(string: commentHierarchy.shortIdUrl)!)
-                    } label: {
-                        Label("Open on Lobste.rs", systemImage: "safari")
-                    }
-
-                    ShareLink(item: URL(string: commentHierarchy.shortIdUrl)!) {
-                        Label("Share", systemImage: "square.and.arrow.up")
-                    }
-                } label: {
-                    Image(systemName: "ellipsis.circle")
+                HStack(spacing: 4) {
+                    Image(systemName: isUpvoted == true ? "arrow.up.circle.fill" : "arrow.up")
+                    Text(localScore.description)
                 }
-                .alert("Flag", isPresented: $showFlagAlert) {
-                    ForEach(CommentFlagReasons.allCases) { reason in
-                        Button(reason.rawValue) {
-                            Task {
-                                let result = await flagItem(shortId: commentHierarchy.shortId, entity: .comments, reason: reason)
-                                if result != .success {
-                                    AlertCenter.shared.present("Couldn't flag comment. Please try again.")
+                .fontWeight(isUpvoted == true ? .bold : .regular)
+                .foregroundStyle(isUpvoted == true ? Color.accentColor : Color.primary)
+
+                if isLoggedIn || demoMode {
+                    Menu {
+                        Button {
+                            onReply?(commentHierarchy.shortId, commentHierarchy.commentingUser)
+                        } label: {
+                            Label("Reply", systemImage: "arrowshape.turn.up.left")
+                        }
+
+                        if isUpvoted == true {
+                            Button {
+                                Task {
+                                    await vote(.unvote)
+                                }
+                            } label: {
+                                Label("Unvote", image: "Unvote")
+                            }
+                        } else {
+                            Button {
+                                Task {
+                                    await vote(.upvote)
+                                }
+                            } label: {
+                                Label("Upvote", systemImage: "arrowshape.up.fill")
+                            }
+                        }
+
+                        Button {
+                            logger.info("Flag")
+                            showFlagAlert = true
+                        } label: {
+                            Label("Flag", systemImage: "ellipsis")
+                        }
+
+                        Button {
+                            logger.info("Hide")
+                            showHideAlert = true
+                        } label: {
+                            Label("Hide", systemImage: "eye.slash")
+                        }
+
+                        Divider()
+
+                        Button {
+                            openURL(URL(string: commentHierarchy.shortIdUrl)!)
+                        } label: {
+                            Label("Open on Lobste.rs", systemImage: "safari")
+                        }
+
+                        ShareLink(item: URL(string: commentHierarchy.shortIdUrl)!) {
+                            Label("Share", systemImage: "square.and.arrow.up")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                    }
+                    .alert("Flag", isPresented: $showFlagAlert) {
+                        ForEach(CommentFlagReasons.allCases) { reason in
+                            Button(reason.rawValue) {
+                                Task {
+                                    let result = await flagItem(shortId: commentHierarchy.shortId, entity: .comments, reason: reason)
+                                    if result != .success {
+                                        AlertCenter.shared.present("Couldn't flag comment. Please try again.")
+                                    }
                                 }
                             }
                         }
+                        Button("Cancel", role: .cancel) {}
                     }
-                    Button("Cancel", role: .cancel) {}
-                }
-                .alert("Hide", isPresented: $showHideAlert) {
-                    Button("Comment") {
-                        logger.info("Hiding comment: \(commentHierarchy.shortId)")
-                        context.insert(FilteredCommentItem(shortId: commentHierarchy.shortId))
-                        withAnimation {
-                            commentHierarchy.isHidden = true
+                    .alert("Hide", isPresented: $showHideAlert) {
+                        Button("Comment") {
+                            logger.info("Hiding comment: \(commentHierarchy.shortId)")
+                            context.insert(FilteredCommentItem(shortId: commentHierarchy.shortId))
+                            withAnimation {
+                                commentHierarchy.isHidden = true
+                            }
                         }
-                    }
-                    Button("User") {
-                        logger.info("Hiding user: \(commentHierarchy.commentingUser)")
-                        context.insert(FilteredPerson(username: commentHierarchy.commentingUser))
-                        withAnimation {
-                            commentHierarchy.isHidden = true
+                        Button("User") {
+                            logger.info("Hiding user: \(commentHierarchy.commentingUser)")
+                            context.insert(FilteredPerson(username: commentHierarchy.commentingUser))
+                            withAnimation {
+                                commentHierarchy.isHidden = true
+                            }
                         }
+                        Button("Cancel", role: .cancel) {}
                     }
-                    Button("Cancel", role: .cancel) {}
                 }
+
+                Spacer()
+
+                Image(systemName: expandComments ? "arrow.down.and.line.horizontal.and.arrow.up" : "arrow.up.and.line.horizontal.and.arrow.down")
+                    .contentTransition(.symbolEffect(.replace))
             }
-
-            Spacer()
-
-            Image(systemName: expandComments ? "arrow.down.and.line.horizontal.and.arrow.up" : "arrow.up.and.line.horizontal.and.arrow.down")
-                .contentTransition(.symbolEffect(.replace))
+            .contentShape(Rectangle())
         }
+        .buttonStyle(.plain)
         .padding(4)
         .background(Color.secondary.opacity(0.1))
         .overlay(alignment: .bottom) {
