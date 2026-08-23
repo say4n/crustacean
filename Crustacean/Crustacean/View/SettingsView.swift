@@ -195,6 +195,15 @@ struct SettingsView: View {
                 } label: {
                     Label("Reset Hidden Users", systemImage: "person.slash")
                 }.disabled(filteredUsers.count == 0)
+
+                Button {
+                    Task {
+                        await AvatarCache.shared.clearCache()
+                    }
+                    logger.info("Avatar cache cleared")
+                } label: {
+                    Label("Reset Avatar Cache", systemImage: "person.crop.circle.badge.xmark")
+                }
             } header: {
                 Text("Miscellaneous")
             }

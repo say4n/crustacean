@@ -12,10 +12,6 @@ struct PostItemView: View {
     let data: Post
     let isVisited: Bool
 
-    private var avatarURL: URL? {
-        URL(string: "https://lobste.rs/avatars/\(data.submitterUser)-32.png")
-    }
-
     var body: some View {
         NavigationLink {
             PostDetailView(postData: data)
@@ -55,16 +51,7 @@ struct PostItemView: View {
 
     var byline: some View {
         HStack(spacing: 8) {
-            AsyncImage(url: avatarURL) { phase in
-                if let image = phase.image {
-                    image.resizable()
-                        .scaledToFill()
-                } else {
-                    Color.secondary.opacity(0.2)
-                }
-            }
-            .frame(width: 16, height: 16)
-            .clipShape(Circle())
+            AvatarView(username: data.submitterUser, size: 16)
 
             let dateString = Date.parseISO(from: data.createdAt)?.timeAgoDisplay() ?? ""
 
